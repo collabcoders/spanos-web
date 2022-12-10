@@ -20,6 +20,7 @@
     "module": "ES2022",
     "allowSyntheticDefaultImports":true,
     "paths": {
+      "@env/*": ["./src/environments/*"],
       "@shared/*": ["./src/app/_shared/*"],
       "@data/*": ["./src/assets/data/*"]
     },
