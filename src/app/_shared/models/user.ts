@@ -1,6 +1,7 @@
 export class User {
     userId: number;
     email: string;
+    phone: string;
     fname: string;
     lname: string;
     password: string;
@@ -12,6 +13,7 @@ export class User {
     constructor(
         userId: number,
         email: string,
+        phone: string,
         fname: string,
         lname: string,
         password: string,
@@ -23,6 +25,7 @@ export class User {
     ) {
         this.userId = userId;
         this.email = email;
+        this.phone = phone;
         this.fname = fname;
         this.lname = lname;
         this.password = password;
