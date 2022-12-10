@@ -24,7 +24,7 @@ export class ApiService {
 
   get(path: string, message?: string, auth = true): Observable<any> {
     //this.spinner.show();
-    return this.http.get(Config.apiBaseUrl + '/' + path, {headers: this.setHeader(auth)})
+    return this.http.get(Config.apiBaseUrl + path, {headers: this.setHeader(auth)})
       .pipe(
         tap(() => this.handleSuccess(message)),
         catchError((err: any) => this.handleError(err)),
@@ -36,7 +36,7 @@ export class ApiService {
 
   post(path: string, payload: any, message?: string, auth = true): Observable<any> {
     //this.spinner.show()
-    return this.http.post(Config.apiBaseUrl + '/' + path, payload, {headers: this.setHeader(auth)})
+    return this.http.post(Config.apiBaseUrl + path, payload, {headers: this.setHeader(auth)})
       .pipe(
         tap(() => this.handleSuccess(message)),
         catchError((err: any) => this.handleError(err)),
@@ -48,7 +48,7 @@ export class ApiService {
 
   delete(path: string, message?: string): Observable<any> {
     //this.spinner.show()
-    return this.http.delete(Config.apiBaseUrl + '/' + path, {headers: this.setHeader(true)})
+    return this.http.delete(Config.apiBaseUrl + path, {headers: this.setHeader(true)})
       .pipe(
         tap(() => this.handleSuccess(message)),
         catchError((err: any) => this.handleError(err)),
@@ -60,7 +60,7 @@ export class ApiService {
 
   patch(path: string, payload: any, message?: string, auth = false): Observable<any> {
     // this.spinner.show()
-    return this.http.patch(Config.apiBaseUrl + '/' + path, payload, {headers: this.setHeader(true)})
+    return this.http.patch(Config.apiBaseUrl + path, payload, {headers: this.setHeader(true)})
       .pipe(
         tap(() => this.handleSuccess(message)),
         catchError((err: any) => this.handleError(err)),
@@ -72,7 +72,7 @@ export class ApiService {
 
   put(path: string, payload: unknown, message?: string, auth = false): Observable<any> {
     // this.spinner.show()
-    return this.http.put(Config.apiBaseUrl + '/' + path, payload, {headers: this.setHeader(true)})
+    return this.http.put(Config.apiBaseUrl + path, payload, {headers: this.setHeader(true)})
       .pipe(
         tap(() => this.handleSuccess(message)),
         catchError((err: any) => this.handleError(err)),
