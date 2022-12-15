@@ -1,12 +1,14 @@
-import { Config } from '@shared/config';
-import { User } from '@shared/models/user';
-import { UtilitiesService } from '@shared/services/utilities.service';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { UtilitiesService } from './utilities.service';
+import { User } from '@shared/models/user';
+import { Config } from '@shared/config';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class TokenService {
+
   private isValid = new BehaviorSubject<boolean>(false);
 
   constructor(private util: UtilitiesService) { }
@@ -59,7 +61,7 @@ export class AuthService {
       return false;
     }
     const now = new Date().getTime();
-    console.log(Config.tokenLocalStorage + ' setup time:' + (now - +setupTime).toString() + ' - ' + Config.tokenString +
+    console.log(Config.tokenLocalStorage + ' setup time:' + (now - +setupTime).toString() + ' - ' + Config.tokenLocalStorage +
       ' expire time:' + (Config.tokenExpireHours * 60 * 60 * 1000).toString());
     if (now - +setupTime > Config.tokenExpireHours * 60 * 60 * 1000) {
       this.isValid.next(false);
@@ -79,5 +81,4 @@ export class AuthService {
     }
     return currentUser;
   }
-
 }

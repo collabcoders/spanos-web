@@ -3,6 +3,7 @@ export class Video {
     title: string;
     year: number;
     file: string;
+    screenshot: string;
     tags: string;
     notes: string;
     description: string;
@@ -15,6 +16,7 @@ export class Video {
         title: string,
         year: number,
         file: string,
+        screenshot: string,
         tags: string,
         notes: string,
         description: string,
@@ -27,6 +29,7 @@ export class Video {
         this.title = title;
         this.year = year;
         this.file = file;
+        this.screenshot = screenshot;
         this.tags = tags;
         this.notes = notes;
         this.description = description;

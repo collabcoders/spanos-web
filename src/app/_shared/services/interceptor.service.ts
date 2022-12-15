@@ -1,17 +1,17 @@
-import { HttpEventType, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Config } from '@shared/config';
-import { AuthService } from './auth.service';
+import { TokenService } from '@shared/services/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterceptorService implements HttpInterceptor {
 
-  constructor(private auth: AuthService) { }
+  constructor(private token: TokenService) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEventType<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let updatedRequest: HttpRequest<any>;
     if (req.headers.has(Config.noAuthHeader)) {
       console.log('skip authorization');
@@ -25,7 +25,7 @@ export class InterceptorService implements HttpInterceptor {
       updatedRequest = req.clone({
         setHeaders: { 
           'Content-Type': 'application/json', 
-          Authorization: `Bearer ${this.auth.getToken()}` 
+          Authorization: `Bearer ${this.token.getToken()}` 
         },
         url: `${req.url}`
       });
