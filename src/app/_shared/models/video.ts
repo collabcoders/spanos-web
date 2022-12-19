@@ -8,7 +8,7 @@ export class Video {
     tags: string;
     notes: string;
     description: string;
-    duration: number;
+    duration: string;
     size: number;
     broll: boolean;
     date: Date;
@@ -22,7 +22,7 @@ export class Video {
         tags: string,
         notes: string,
         description: string,
-        duration: number,
+        duration: string,
         size: number,
         broll: boolean,
         date: Date
