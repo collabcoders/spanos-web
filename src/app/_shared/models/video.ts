@@ -1,6 +1,7 @@
 export class Video {
     videoId: number;
     title: string;
+    featuring: string;
     year: number;
     file: string;
     screenshot: string;
@@ -14,6 +15,7 @@ export class Video {
     constructor(
         videoId: number,
         title: string,
+        featuring: string,
         year: number,
         file: string,
         screenshot: string,
@@ -27,6 +29,7 @@ export class Video {
     ) {
         this.videoId = videoId;
         this.title = title;
+        this.featuring = featuring;
         this.year = year;
         this.file = file;
         this.screenshot = screenshot;
