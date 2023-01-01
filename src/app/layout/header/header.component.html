@@ -1,0 +1,30 @@
+
+
+<nav class="navbar navbar-expand-lg bg-white py-4 border-bottom fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="javascript:;"><img src="assets/images/logo.png" alt="Logo" height="40" /></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item px-md-3">
+            <a class="nav-link active" (click)="reloadComponent('/video')" aria-current="page" [routerLink]="['/video']" href="javascript:;">Videos</a>
+          </li>
+          <li class="nav-item px-md-3">
+            <a class="nav-link" [routerLink]="['/favorities']" href="javascript:;">Favorities</a>
+          </li>
+          <li class="nav-item px-md-3">
+            <a class="nav-link" href="javascript:;">Users</a>
+          </li>
+          <li class="nav-item px-md-3">
+            <a class="nav-link" href="javascript:;">Support</a>
+          </li>
+          <li class="nav-item ps-md-3">
+            <a class="nav-link" href="javascript:;">Sign Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+

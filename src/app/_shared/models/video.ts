@@ -1,40 +1,42 @@
 export class Video {
     videoId: number;
     title: string;
-    featuring: string;
     year: number;
     file: string;
-    hls: string;
     screenshot: string;
     tags: string;
     notes: string;
     description: string;
-    duration: string;
+    duration: number;
     size: number;
     broll: boolean;
     date: Date;
+    hls:string;
+    gif:string;
+    pic:string;
+    src:string;
     constructor(
         videoId: number,
         title: string,
-        featuring: string,
         year: number,
         file: string,
-        hls: string,
         screenshot: string,
         tags: string,
         notes: string,
         description: string,
-        duration: string,
+        duration: number,
         size: number,
         broll: boolean,
-        date: Date
+        date: Date,
+        hls:string,
+        gif:string,
+        pic:string,
+        src:string
     ) {
         this.videoId = videoId;
         this.title = title;
-        this.featuring = featuring;
         this.year = year;
         this.file = file;
-        this.hls = hls;
         this.screenshot = screenshot;
         this.tags = tags;
         this.notes = notes;
@@ -43,5 +45,9 @@ export class Video {
         this.size = size;
         this.broll = broll;
         this.date = date;
+        this.hls=hls;
+        this.gif=gif;
+        this.pic=pic;
+        this.src=src;
     }
 }

@@ -3,20 +3,23 @@ export class Bookmark {
     userId: number;
     videoId: number;
     time: number;
-    featured: boolean;
+    title: string;
+    featured: number;
     dateAdded: Date;
     constructor(
-        bookmarkId: number,
-        userId: number,
-        videoId: number,
-        time: number,
-        featured: boolean,
-        dateAdded: Date
+        bookmarkId: number = 0,
+        userId: number = 0,
+        videoId: number = 0,
+        time: number = 0,
+        title: string = '',
+        featured: number = 0,
+        dateAdded: Date = new Date()
     ) {
         this.bookmarkId = bookmarkId;
         this.userId = userId;
         this.videoId = videoId;
         this.time = time;
+        this.title = title;
         this.featured = featured;
         this.dateAdded = dateAdded;
     }

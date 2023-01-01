@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { catchError, finalize, Observable, of, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Config } from '@shared/config';
-// import { SpinnerService } from './spinner.service';
+//import { SpinnerService } from './spinner.service';
 // import { ToastService } from './toast.service';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class ApiService {
     }
     return header;
   }
+
 
   get(path: string, message?: string, auth = true): Observable<any> {
     //this.spinner.show();
