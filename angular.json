@@ -20,7 +20,10 @@
             "outputPath": "dist/spanos",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "allowedCommonJsDependencies": ["moment"],
+            "allowedCommonJsDependencies": ["moment","plyr","hls.js","videojs-vtt.js",
+            "safe-json-parse/tuple","mux.js/lib/utils/clock","mux.js/lib/tools/parse-sidx",
+            "keycode","global/window","global/document","@videojs/xhr"
+          ],
             "polyfills": [
               "zone.js"
             ],
