@@ -9,11 +9,13 @@ import { FavVideosModule } from './fav-videos/fav-videos.module';
 import { LayoutModule } from './layout/layout.module';
 import { VideosModule } from './videos/videos.module';
 import { VideoPlayerComponent } from './_shared/components/video-player/video-player.component';
+import { AlertComponent } from './_shared/components/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     VideoPlayerComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

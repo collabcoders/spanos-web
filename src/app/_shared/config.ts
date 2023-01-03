@@ -3,5 +3,9 @@ export const Config = {
     tokenLocalStorage: 'AGS_AUTH_TOKEN',
     noAuthHeader: 'X-No-Auth',
     authorizationHeader: 'Authorization',
-    tokenExpireHours: 72
+    tokenExpireHours: 72,
+    alertOptions: {
+        autoClose: true,
+        keepAfterRouteChange: false
+    }
 };
