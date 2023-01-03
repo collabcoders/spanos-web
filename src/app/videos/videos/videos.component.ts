@@ -8,11 +8,11 @@ import { HttpParams } from '@angular/common/http';
 import videojs from 'video.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Bookmark } from '@shared/models/bookmark';
+import { Favorite } from '@shared/models/favorite';
 
 @Component({
   selector: 'app-videos',
-  templateUrl: './videos.component.html',
-  styleUrls: ['./videos.component.scss']
+  templateUrl: './videos.component.html'
 })
 export class VideosComponent implements OnInit,AfterViewChecked{
   url :string = '';
@@ -24,17 +24,21 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   showlist: boolean = true;
   videoobj: any;
   bookmarkobj = new Bookmark();
+  favobj = new Favorite();
   count = 0;
+  year:number = -1;
   public showSpinner: boolean = false;
   bookmarklst: any;
   videoJSplayer: any;
   searchResult: any=[];
+  yearslst: any;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
     private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService) {
   }
   ngOnInit(): void {
     this.LoadVideos();
+    this.GetYears();
   }
 
   ngAfterViewChecked()
@@ -51,10 +55,23 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     }
   }
 
+  GetYears()
+  {
+    this.apiServices.get('/Years').subscribe(data => {
+      try{
+        if (data) {
+            this.yearslst = data;
+        }
+      }catch{
+      }
+    });
+  }
+
   LoadVideos()
   {
     this.SpinnerService.show();
-    this.apiServices.get('/Videos').subscribe(data => {
+    let params = new HttpParams().set("userId",1).set("amp;favorites",true).set("row", 12);
+    this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
             this.videoslst = data.data;
@@ -75,6 +92,36 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         this.SpinnerService.hide();
       }
     });
+  }
+
+  AddToFavrature(obj:any,i:number)
+  {
+    if(obj.favoriteId == 0){
+    this.favobj.videoId = obj.videoId;
+    this.favobj.userId = 1;
+    this.apiServices.post('/AddFavorite',this.favobj).subscribe(data => {
+      try{
+          if(data.success){
+            this.favobj = new Favorite();
+            this.LoadVideos();
+        }
+      }catch{
+        this.SpinnerService.hide();
+      }
+    });
+    }
+    else{
+    this.apiServices.delete('/DeleteFavorite/'+ obj.favoriteId).subscribe(data => {
+      try{
+          if(data.success){
+            this.favobj = new Favorite();
+            this.LoadVideos();
+          }
+      }catch{
+        this.SpinnerService.hide();
+      }
+    });
+    }
   }
 
   showdetails(obj:Video)
@@ -107,16 +154,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     document.body.removeChild(a)
   }
 
-  // showGif(event: any, video: Video) {
-  //   const target = event.target || event.srcElement || event.currentTarget;
-  //   target.src = video.gif;
-  // }
-
-  // showScreenshot(event: any, video: Video) {
-  //   const target = event.target || event.srcElement || event.currentTarget;
-  //   target.src = video.pic;
-  // }
-
   showGif(index:number,relvid:boolean) {
     if(!relvid)
     {this.videoslst1[index].src = this.videoslst1[index].gif;}
@@ -135,7 +172,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.showLoadingSpinner();
     setTimeout(() => {
     if (this.bottomReached()) {
-
       //this.LoadVideos();
       var size = 12;
       this.videoslst2=this.videoslst;
@@ -225,7 +261,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.bookmarkobj = Object.assign({}, item);
     this.setCurrentTime(this.bookmarkobj.time);
   }
-
 
   setCurrentTime(time:number)
   {
@@ -322,6 +357,21 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       this.searchResult.length=0;
       this.count = 0;
     }
+  }
+
+  SearchByYear()
+  {
+     this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
+     if(this.year == -1)
+     {
+      this.searchResult = [];
+      this.videoslst = [];
+      this.LoadVideos();
+     }else
+     {
+      this.videoslst1 = this.searchResult;
+     }
+
   }
 
 }

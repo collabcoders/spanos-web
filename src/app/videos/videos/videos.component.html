@@ -22,12 +22,10 @@
           </div>
           <div class="col-lg-2 col-md-3 mt-4">
             <div class="search-bar position-relative shadow rounded-pill">
-              <select class="form-select form-select-lg py-3 rounded-pill border-0 px-4">
-                <option>2022</option>
-                <option>2023</option>
-                <option>2024</option>
-                <option>2025</option>
-                <option>2026</option>
+              <select (change)="SearchByYear()" [(ngModel)]="year" class="form-select form-select-lg py-3 rounded-pill border-0 px-4">
+                <option selected value=-1>All Years</option>
+                <option *ngFor="let item of yearslst" value="{{item}}">{{item}}</option>
+                <option value=0>Unknown</option>
               </select>
             </div>
           </div>
@@ -40,7 +38,7 @@
         <div class="row">
           <div *ngFor="let obj of videoslst1;let i = index" class="col-lg-3 col-md-6 mt-5" >
             <div class="card radius overflow-hidden border-0 position-relative h-100">
-              <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
+              <a href="javascript:;" (click)="AddToFavrature(obj,i)" [ngClass]="{'heart-white':obj.favoriteId == 0,'heart-red':obj.favoriteId > 0}" class="heart-white position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
               <div class="position-relative text-center overflow-hidden img-container">
                 <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(i,false)" (mouseover)="showGif(i,false)" (click)="showdetails(obj)">
                 <p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>

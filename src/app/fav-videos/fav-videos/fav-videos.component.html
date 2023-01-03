@@ -1,248 +1,191 @@
+<!-- list section -->
+<section *ngIf="showlist">
+  <section class="hero bg-primary pt-1 mt-5 text-white">
+      <div class="container py-5 mt-5">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="display-5 fw-bold">Videos</h1>
+            <p class="mt-4 pb-5">The entire AGS Video Archive converted from tape to digital.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="search pb-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-md-9 mt-4">
+            <div class="search-bar position-relative shadow rounded-pill">
+              <input type="text" (keyup)="onSearch($event)" class="form-control form-control-lg rounded-pill py-3 border-0" placeholder="Search Keyword" />
+              <a href="javascript:;" class="btn bg-white position-absolute bg-none"><i class="fas fa-search"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3 mt-4">
+            <div class="search-bar position-relative shadow rounded-pill">
+              <select (change)="SearchByYear()" [(ngModel)]="year" class="form-select form-select-lg py-3 rounded-pill border-0 px-4">
+                <option selected value=-1>All Years</option>
+                <option *ngFor="let item of yearslst" value="{{item}}">{{item}}</option>
+                <option value=0>Unknown</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="videos pb-5">
+      <div class="container pb-5">
+        <div class="row">
+          <div *ngFor="let obj of videoslst1;let i = index" class="col-lg-3 col-md-6 mt-5" >
+            <div class="card radius overflow-hidden border-0 position-relative h-100">
+              <a href="javascript:;" (click)="AddToFavrature(obj,i)" [ngClass]="{'heart-white':obj.favoriteId == 0,'heart-red':obj.favoriteId > 0}" class="heart-white position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
+              <div class="position-relative text-center overflow-hidden img-container">
+                <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(i,false)" (mouseover)="showGif(i,false)" (click)="showdetails(obj)">
+                <p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
+                <img class="w-100 h-100" [src]="obj.src" />
+              </div>
+              <div class="card-body">
+                <h3 class="h5 fw-bold overflow-ellipsis"><a href="javascript:;" class="text-decoration-none text-dark" (click)="showdetails(obj)">{{obj.title}}</a></h3>
+                <span class="me-3 mt-1"><i class="fas fa-clock"></i> {{obj.duration}}</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: {{obj.year}}</span>
+                <div class="clearfix"></div>
+                <span *ngFor="let tag of obj.tags | reltags">
+                 <p class="bg-light p-2 text-decoration-none text-muted d-inline-block mt-3 me-2">{{tag}}</p> </span>
+              </div>
+            </div>
+            </div>
+          </div>
+      </div>
+
+      <div *ngIf="showSpinner==true" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+    </section>
+  </section>
+
+  <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+    <div class="spinner-border" style="color: white" role="status"></div>
+  </ngx-spinner>
+
+  <section *ngIf="!showlist">
+    <div class="container mt-5 pt-5">
+      <div class="row mt-5">
+        <div class="col-lg-8">
+          <div class="rounded-4 overflow-hidden">
+         <video id="videoPlay" class="video-js vjs-fluid vjs-default-skin" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
+          <source [src]="videoobj.hls" type="application/x-mpegURL">
+         </video>
+          </div>
+          <div class="row my-4">
+            <div class="col-lg-8 col-md-7 ps-md-0 mt-4">
+              <div class="d-flex align-items-center">
+                <a (click)="addupdatebookmark()" class="btn btn-primary rounded-3 py-2 px-3 fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Set Bookmark"><i class="fas fa-bookmark"></i></a>
+                <input type="text" [(ngModel)]="bookmarkobj.title" class="form-control bg-light2 ms-2 border-0 form-control-lg ps-4" placeholder="Bookmark Caption..." />
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-5 pe-md-0 mt-4">
+              <div class="float-end">
+                <a href="javascript:;" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
+                <a href="javascript:;" class="btn btn-outline-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
+                <a href="javascript:;" (click)="downloadvideo()" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="fas fa-download"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="d-md-flex mb-2 pt-3">
+            <div class="bookmarks" *ngFor="let item of bookmarklst ;let a = index">
+              <a href="javascript:;" class="text-white bg-primary py-2 px-3 rounded-pill text-decoration-none me-2 mt-2" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 p-md-0">
+              <h2 class="h3 fw-bold my-4">{{videoobj.title}}</h2>
+              <small class="text-muted">Captured year: {{videoobj.year}}</small>
+              <p class="mt-4 line-h1">{{videoobj.description}}</p>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-12 p-md-0">
+              <div class="d-flex justify-content-between">
+                <h3 class="h4 fw-bold">Comment</h3>
+                <span class="opacity-75">
+                  <i class="fas fa-users"></i> <small class="h5 fw-normal mx-1">12,078</small> <i class="fas fa-bars"></i>
+                </span>
+              </div>
+              <input type="text" class="form-control form-control-lg ps-4 rounded-pill border-0 py-3 mt-4 mb-5" placeholder="Add a Comment" />
+              <div class="comment-box mb-3">
+                <img src="assets/images/user.png" alt="Image" class="float-start me-3 rounded-circle border" />
+                <div class="overflow-hidden">
+                  <h5 class="h5 fw-bold float-start">Gerald Solid</h5>
+                  <small class="float-end text-muted">2 days ago</small>
+                  <div class="clearfix"></div>
+                  <p class="line-h1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                  <hr />
+                  <a href="javascript:;" class="text-decoration-none text-muted me-3 mb-4 d-inline-block"><i class="fas fa-thumbs-up"></i> 125</a>
+                  <a href="javascript:;" class="text-decoration-none text-muted mb-4 d-inline-block"><i class="fas fa-thumbs-down"></i> 125</a>
+                </div>
+              </div>
+              <div class="comment-box mb-3">
+                <img src="assets/images/user.png" alt="Image" class="float-start me-3 rounded-circle border" />
+                <div class="overflow-hidden">
+                  <h5 class="h5 fw-bold float-start">Gerald Solid</h5>
+                  <small class="float-end text-muted">2 days ago</small>
+                  <div class="clearfix"></div>
+                  <p class="line-h1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                  <hr />
+                  <a href="javascript:;" class="text-decoration-none text-muted me-3 mb-4 d-inline-block"><i class="fas fa-thumbs-up"></i> 125</a>
+                  <a href="javascript:;" class="text-decoration-none text-muted mb-4 d-inline-block"><i class="fas fa-thumbs-down"></i> 125</a>
+                </div>
+              </div>
+              <div class="comment-box mb-3">
+                <img src="assets/images/user.png" alt="Image" class="float-start me-3 rounded-circle border" />
+                <div class="overflow-hidden">
+                  <h5 class="h5 fw-bold float-start">Gerald Solid</h5>
+                  <small class="float-end text-muted">2 days ago</small>
+                  <div class="clearfix"></div>
+                  <p class="line-h1">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                  <hr />
+                  <a href="javascript:;" class="text-decoration-none text-muted me-3 mb-4 d-inline-block"><i class="fas fa-thumbs-up"></i> 125</a>
+                  <a href="javascript:;" class="text-decoration-none text-muted mb-4 d-inline-block"><i class="fas fa-thumbs-down"></i> 125</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="d-flex justify-content-between">
+            <h3 class="h4 fw-bold">Related Videos</h3>
+            <span class="opacity-75 mt-2">
+              <i class="fas fa-bars"></i>
+            </span>
+          </div>
+          <div *ngFor="let item of relatedvideos ;let j = index" class="card bg-none border-0 rounded-0 mt-4 video-list">
+            <div class="row g-0">
+              <div class="col-5 ps-md-0">
+                <div class="position-relative">
+                  <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(j,true)" (mouseover)="showGif(j,true)" (click)="showreldetails(item)">
+                  <p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0 mt-5 mb-5"><i class="fas fa-play text-white"></i></p></a>
+                  <img class="w-100 h-100" [src]="item.src">
+                  <span class="py-1 px-2 text-white rounded-pill d-inline-block position-absolute z-index end-0 bottom-0 me-3 mb-3">{{item.duration}}</span>
+
+                </div>
+              </div>
+              <div class="col-7 pe-md-0">
+                <div class="card-body py-0 pe-0">
+                  <h5 class="fw-bold h6 mb-2 mt-0"><a href="javascript:;" (click)="showreldetails(item)" class="text-decoration-none">{{item.title}}</a></h5>
+                  <p class="card-text my-2">{{item.description}}</p>
+                  <p class="card-text"><small class="text-muted">Captured Year: {{item.year}}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="javascript:;" class="mx-auto text-decoration-none text-dark pt-5 pb-4 d-inline-block">Show More <i class="fas fa-angle-down"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </section>
 
 
-<section class="hero bg-primary pt-1 mt-5 text-white">
-    <div class="container py-md-5 mt-5">
-      <div class="row">
-        <div class="col-12">
-          <h1 class="display-5 fw-bold">Videos</h1>
-          <p class="mt-4 pb-5">The entire AGS Video Archive converted from tape to digital.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <section class="search pb-4">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-10 col-md-9 mt-4">
-          <div class="search-bar position-relative shadow rounded-pill">
-            <input type="text" class="form-control form-control-lg rounded-pill py-3 border-0" placeholder="Search Keyword" />
-            <a href="javascript:;" class="btn bg-white position-absolute bg-none"><i class="fas fa-search"></i></a>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-3 mt-4">
-          <div class="search-bar position-relative shadow rounded-pill">
-            <select class="form-select form-select-lg py-3 rounded-pill border-0 px-4">
-              <option>2022</option>
-              <option>2023</option>
-              <option>2024</option>
-              <option>2025</option>
-              <option>2026</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-    
-  <section class="videos pb-5">
-    <div class="container pb-5">
-      <div class="row">
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mt-5">
-          <div class="card radius overflow-hidden border-0 position-relative">
-            <a href="javascript:;" class="heart position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
-            <div class="position-relative text-center overflow-hidden">
-              <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" href="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w.gif"><img class="gif-img w-100 h-100" src="https://media0.giphy.com/media/gVAT5G1IoF3Jm/200w_s.gif"><p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-              <img src="assets/images/video.jpg" class="img-fluid" alt="Image" />
-            </div>
-            <div class="card-body">
-              <h3 class="h5 fw-bold">Lorem ipsum dolor sit amet, cons etetur sadipscing</h3>
-              <span class="me-3 mt-1"><i class="fas fa-clock"></i> 02:34:12</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: 2021</span>
-              <div class="clearfix"></div>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-              <a href="javascript:;" class="bg-light py-2 px-3 text-decoration-none text-muted d-inline-block mt-3 me-2">Lorem</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+

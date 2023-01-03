@@ -12,4 +12,11 @@ export class FooterComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
+  reloadComponent(url:string) {
+    let currentUrl = url;
+    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.route.onSameUrlNavigation = 'reload';
+    this.route.navigate([currentUrl]);
+  }
 }

@@ -9,10 +9,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item px-md-3">
-            <a class="nav-link active" (click)="reloadComponent('/video')" aria-current="page" [routerLink]="['/video']" href="javascript:;">Videos</a>
+            <a class="nav-link" (click)="reloadComponent('/video')" [routerLink]="['/video']" href="javascript:;">Videos</a>
           </li>
           <li class="nav-item px-md-3">
-            <a class="nav-link" [routerLink]="['/favorities']" href="javascript:;">Favorities</a>
+            <a class="nav-link" (click)="reloadComponent('/favorities')" [routerLink]="['/favorities']" href="javascript:;">Favorities</a>
           </li>
           <li class="nav-item px-md-3">
             <a class="nav-link" href="javascript:;">Users</a>

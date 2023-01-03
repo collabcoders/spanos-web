@@ -15,6 +15,7 @@ export class Video {
     gif:string;
     pic:string;
     src:string;
+    favoriteId:number;
     constructor(
         videoId: number,
         title: string,
@@ -31,7 +32,9 @@ export class Video {
         hls:string,
         gif:string,
         pic:string,
-        src:string
+        src:string,
+        favoriteId:number
+
     ) {
         this.videoId = videoId;
         this.title = title;
@@ -49,5 +52,6 @@ export class Video {
         this.gif=gif;
         this.pic=pic;
         this.src=src;
+        this.favoriteId=favoriteId;
     }
 }

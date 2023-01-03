@@ -183,8 +183,11 @@ a:hover {
 .videos .card:hover .play, .videos .card:active .play, .videos .card:focus .play{
 	background:rgba(0, 0, 0, 0.9);
 }
-.heart{
+.heart-red{
 	color:#C24E4E;
+}
+.heart-white{
+	color:#f8f2f2;
 }
 .comment-box img{
 	width:50px;

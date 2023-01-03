@@ -5,8 +5,8 @@
         <div class="col-12 text-center">
           <a href="javascript:;" class="footer-logo"><img src="assets/images/logo.png" height="35" alt="Logo" /></a>
           <div class="clarfix mb-4"></div>
-          <a href="javascript:;" [routerLink]="['/video']" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Videos</a>
-          <a href="javascript:;" [routerLink]="['/favorities']" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Favorites</a>
+          <a href="javascript:;" (click)="reloadComponent('/video')" [routerLink]="['/video']" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Videos</a>
+          <a href="javascript:;" (click)="reloadComponent('/favorities')" [routerLink]="['/favorities']" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Favorites</a>
           <a href="javascript:;" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Users</a>
           <a href="javascript:;" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Support</a>
           <a href="javascript:;" class="footer-links text-decoration-none text-dark mx-3 mt-3 d-inline-block">Sign Out</a>
