@@ -9,6 +9,7 @@ import videojs from 'video.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Bookmark } from '@shared/models/bookmark';
 import { Favorite } from '@shared/models/favorite';
+import { Config } from '@shared/config';
 
 @Component({
   selector: 'app-videos',
