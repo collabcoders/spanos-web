@@ -9,14 +9,13 @@ import videojs from 'video.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Bookmark } from '@shared/models/bookmark';
 import { Favorite } from '@shared/models/favorite';
-import { Config } from '@shared/config';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-videos',
   templateUrl: './videos.component.html'
 })
 export class VideosComponent implements OnInit,AfterViewChecked{
-  url :string = '';
   videoslst : any = [];
   videoslst1 : any = [];
   videoslst2 : any = [];
@@ -33,18 +32,32 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   videoJSplayer: any;
   searchResult: any=[];
   yearslst: any;
+  videoId: any;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
-    private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService) {
+    private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService,
+    private toster:ToastrService) {
   }
   ngOnInit(): void {
     this.LoadVideos();
     this.GetYears();
   }
 
+  showdetailsfromparam()
+  {
+    this.route.queryParams.subscribe(params => {
+       this.videoId = params['videoId'];
+       if(this.videoId > 0)
+       {
+        var obj = this.videoslst.find((a:any) => a.videoId == this.videoId);
+         this.showdetails(obj);
+       }
+    });
+  }
+
   ngAfterViewChecked()
   {
-    if(this.videoobj){
+    if(this.videoobj && !this.showlist){
     var player = videojs('videoPlay');
       player.on("pause", function () {
       player.bigPlayButton.show();
@@ -52,7 +65,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       player.on("play", function () {
         player.bigPlayButton.hide();
       });
-
     }
   }
 
@@ -88,11 +100,17 @@ export class VideosComponent implements OnInit,AfterViewChecked{
             });
             this.videoslst1 = this.videoslst.slice(0,12);
             this.SpinnerService.hide();
+            this.showdetailsfromparam();
         }
       }catch{
         this.SpinnerService.hide();
       }
     });
+  }
+
+  copyurl()
+  {
+
   }
 
   AddToFavrature(obj:any,i:number)
@@ -105,9 +123,11 @@ export class VideosComponent implements OnInit,AfterViewChecked{
           if(data.success){
             this.favobj = new Favorite();
             this.LoadVideos();
+            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -117,9 +137,11 @@ export class VideosComponent implements OnInit,AfterViewChecked{
           if(data.success){
             this.favobj = new Favorite();
             this.LoadVideos();
+            this.toster.success(data.message);
           }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -128,20 +150,29 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   showdetails(obj:Video)
   {
     this.videoobj = obj;
+    this.selectedVideo(obj,false);
     this.showlist = false;
-    this.url = this.videoobj.hls;
+    window.scroll({ top: 0, left: 0, behavior: 'smooth'});  
+    this.changeurl(obj.videoId);
     this.getrealtedvideos(obj.tags);
     this.getbookmarks();
+  }
+  changeurl(videoId:number)
+  {
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + "/video?videoId="+videoId};       
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
   showreldetails(item:Video)
   {
     this.videoobj = item;
+    this.selectedVideo(item,true);
     this.showlist = false;
-    this.url = this.videoobj.hls;
-    this.getrealtedvideos(item.tags);
+    window.scroll({ top: 0,left: 0,behavior: 'smooth'});
+    this.changeurl(item.videoId);
     this.getbookmarks();
-    this.selectedVideo(item);
+    this.getrealtedvideos(item.tags);
   }
 
   downloadvideo() {
@@ -293,11 +324,13 @@ export class VideosComponent implements OnInit,AfterViewChecked{
           if(data.success){
             this.bookmarkobj = new Bookmark();
             this.getbookmarks();
-            this.selectedVideo(this.videoobj);
+            this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
+            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -308,11 +341,13 @@ export class VideosComponent implements OnInit,AfterViewChecked{
           if(data.success){
             this.bookmarkobj = new Bookmark();
             this.getbookmarks();
-            this.selectedVideo(this.videoobj);
+            this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
+            this.toster.success(data.message);
           }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -324,24 +359,45 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       try{
           if(data._http == 200){
             this.SpinnerService.hide();
+            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
   }
 
-  selectedVideo(objData:Video)
+  selectedVideo(objData:Video,isrel:boolean)
   {
     if (videojs.getPlayers()[`videoPlay`]) {
       delete videojs.getPlayers()[`videoPlay`];
     }
-    videojs(`videoPlay`).src({
+    if(!isrel){
+     if (videojs.getPlayers()[`videoPlay`]) {
+     videojs(`videoPlay`).src({
+      src: objData.hls,
+      type: "application/x-mpegURL"
+     });
+     }
+    }
+    else{
+      videojs(`videoPlay`).src({
       src: objData.hls,
       type: "application/x-mpegURL"
     });
-
+    }
   }
+  backtolist()
+  {  
+    if (videojs.getPlayers()[`videoPlay`]) {
+    videojs.getPlayers()[`videoPlay`].dispose;}
+    this.videoobj = {};
+    this.showlist = true;
+    this.router.navigate(['/video']);
+  }
+
+
   onSearch(event: any) {
     this.count = 0;
     const value = event.target.value;
@@ -362,17 +418,31 @@ export class VideosComponent implements OnInit,AfterViewChecked{
 
   SearchByYear()
   {
-     this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
-     if(this.year == -1)
-     {
-      this.searchResult = [];
-      this.videoslst = [];
-      this.LoadVideos();
-     }else
-     {
-      this.videoslst1 = this.searchResult;
-     }
+    //  this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
+    //  if(this.year == -1)
+    //  {
+    //   this.searchResult = [];
+    //   this.videoslst = [];
+    //   this.LoadVideos();
+    //  }else
+    //  {
+    //   this.videoslst1 = this.searchResult;
+    //  }
 
+    this.count = 0;
+    if (this.year != -1) {
+      this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
+      this.videoslst1=this.searchResult;
+      this.videoslst1 = this.searchResult.slice(0,12);
+      if( this.videoslst1.length<12){
+        this.showSpinner=false;
+      }
+    }
+    else{
+      this.videoslst1 = this.videoslst.slice(0,12);
+      this.searchResult.length=0;
+      this.count = 0;
+    }
   }
 
 }

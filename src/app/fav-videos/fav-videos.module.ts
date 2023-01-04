@@ -7,6 +7,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ReltagsPipe } from '@shared/pipes/reltags.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { ReltagsPipe } from '@shared/pipes/reltags.pipe';
         HttpClientModule,
         NgxSpinnerModule,
         BrowserAnimationsModule,
-        FormsModule
+        FormsModule,
+        NgbModule
     ]
 })
 export class FavVideosModule { }

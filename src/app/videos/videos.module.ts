@@ -7,6 +7,7 @@ import { TagsPipe } from '@shared/pipes/tags.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
         HttpClientModule,
         NgxSpinnerModule,
         BrowserAnimationsModule,
-        FormsModule
+        FormsModule,
+        NgbModule
     ]
 })
 export class VideosModule { }

@@ -87,9 +87,10 @@
             </div>
             <div class="col-lg-4 col-md-5 pe-md-0 mt-4">
               <div class="float-end">
-                <a href="javascript:;" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
-                <a href="javascript:;" class="btn btn-outline-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
-                <a href="javascript:;" (click)="downloadvideo()" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="fas fa-download"></i></a>
+                <a href="javascript:;" ngbTooltip="Back" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" (click)="backtolist()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="back"><i class="fa fa-arrow-left"></i></a>
+                <a href="javascript:;" ngbTooltip="Share"  class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
+                <a href="javascript:;" ngbTooltip="Edit" class="btn btn-outline-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
+                <a href="javascript:;" ngbTooltip="Download" (click)="downloadvideo()" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="fas fa-download"></i></a>
               </div>
             </div>
           </div>

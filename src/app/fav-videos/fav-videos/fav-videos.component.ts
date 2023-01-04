@@ -8,6 +8,7 @@ import { Video } from '@shared/models/video';
 import { ApiService } from '@shared/services/api.service';
 import { VideoService } from '@shared/services/video.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import videojs from 'video.js';
 
 @Component({
@@ -34,7 +35,8 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
   yearslst: any;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
-    private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService) {
+    private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService,
+    private toster:ToastrService) {
   }
   ngOnInit(): void {
     this.LoadFavoriteVideos();
@@ -43,7 +45,7 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
 
   ngAfterViewChecked()
   {
-    if(this.videoobj){
+    if(this.videoobj && !this.showlist){
     var player = videojs('videoPlay');
       player.on("pause", function () {
       player.bigPlayButton.show();
@@ -104,9 +106,11 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
           if(data.success){
             this.favobj = new Favorite();
             this.LoadFavoriteVideos();
+            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
       });
     }
@@ -116,9 +120,11 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
           if(data.success){
             this.favobj = new Favorite();
             this.LoadFavoriteVideos();
+            this.toster.success(data.message);
           }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
       });
     }
@@ -131,6 +137,8 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
     this.url = this.videoobj.hls;
     this.getrealtedvideos(obj.tags);
     this.getbookmarks();
+    this.selectedVideo(obj,false);
+    window.scroll({ top: 0,left: 0,behavior: 'smooth'});
   }
 
   showreldetails(item:Video)
@@ -140,7 +148,8 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
     this.url = this.videoobj.hls;
     this.getrealtedvideos(item.tags);
     this.getbookmarks();
-    this.selectedVideo(item);
+    this.selectedVideo(item,true);
+    window.scroll({ top: 0,left: 0,behavior: 'smooth'});
   }
 
   downloadvideo() {
@@ -291,11 +300,13 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
           if(data.success){
             this.bookmarkobj = new Bookmark();
             this.getbookmarks();
-            this.selectedVideo(this.videoobj);
+            this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
+            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -306,11 +317,13 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
           if(data.success){
             this.bookmarkobj = new Bookmark();
             this.getbookmarks();
-            this.selectedVideo(this.videoobj);
+            this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
+            this.toster.success(data.message);
           }
       }catch{
         this.SpinnerService.hide();
+        this.toster.error(data.message);
       }
     });
     }
@@ -329,16 +342,32 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
     });
   }
 
-  selectedVideo(objData:Video)
+  selectedVideo(objData:Video,isrel:boolean)
   {
     if (videojs.getPlayers()[`videoPlay`]) {
       delete videojs.getPlayers()[`videoPlay`];
     }
-    videojs(`videoPlay`).src({
+    if(!isrel){
+     if (videojs.getPlayers()[`videoPlay`]) {
+     videojs(`videoPlay`).src({
+      src: objData.hls,
+      type: "application/x-mpegURL"
+     });
+     }
+    }
+    else{
+      videojs(`videoPlay`).src({
       src: objData.hls,
       type: "application/x-mpegURL"
     });
-
+    }
+  }
+  backtolist()
+  {  
+    if (videojs.getPlayers()[`videoPlay`]) {
+    videojs.getPlayers()[`videoPlay`].dispose;}
+    this.videoobj = {};
+    this.showlist = true;
   }
   onSearch(event: any) {
     this.count = 0;
@@ -357,7 +386,6 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
       this.count = 0;
     }
   }
-
   SearchByYear()
   {
      this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);

@@ -87,18 +87,22 @@
             </div>
             <div class="col-lg-4 col-md-5 pe-md-0 mt-4">
               <div class="float-end">
-                <a href="javascript:;" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
-                <a href="javascript:;" class="btn btn-outline-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
-                <a href="javascript:;" (click)="downloadvideo()" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="fas fa-download"></i></a>
+                <a href="javascript:;" ngbTooltip="Back" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" (click)="backtolist()" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="back"><i class="fa fa-arrow-left"></i></a>
+                <a href="javascript:;" ngbTooltip="Share" class="btn btn-outline-secondary py-2 fw-bold mt-1 ms-2" (click)="copyurl()"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
+                <a href="javascript:;" ngbTooltip="Edit" class="btn btn-outline-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
+                <a href="javascript:;" ngbTooltip="Download" (click)="downloadvideo()" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Download"><i class="fas fa-download"></i></a>
               </div>
             </div>
           </div>
-          <div class="d-md-flex mb-2 pt-3">
-            <div class="bookmarks" *ngFor="let item of bookmarklst ;let a = index">
-              <a href="javascript:;" class="text-white bg-primary py-2 px-3 rounded-pill text-decoration-none me-2 mt-2" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
+          <div class="mb-2 pt-3">
+            <div class="bookmarks float-start" *ngFor="let item of bookmarklst ;let a = index">
+              <a href="javascript:;" class="text-white bg-primary py-2 px-3 rounded-pill text-decoration-none me-2 mt-2 d-block" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
+              <div class="clearfix"></div>
             </div>
+            <div class="clearfix"></div>
           </div>
-          <div class="row">
+          <div class="clearfix"></div>
+          <div class="row w-100">
             <div class="col-12 p-md-0">
               <h2 class="h3 fw-bold my-4">{{videoobj.title}}</h2>
               <small class="text-muted">Captured year: {{videoobj.year}}</small>
@@ -186,3 +190,6 @@
     </div>
 
   </section>
+
+
+

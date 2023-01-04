@@ -35,7 +35,9 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/plyr/dist/plyr.css"
+              "node_modules/plyr/dist/plyr.css",
+              "node_modules/ngx-toastr/toastr.css"
+
             ],
             "scripts": [
               "node_modules/plyr/dist/plyr.js"
