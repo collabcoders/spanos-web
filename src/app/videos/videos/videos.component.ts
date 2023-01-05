@@ -33,6 +33,8 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   searchResult: any=[];
   yearslst: any;
   videoId: any;
+  keyword:string = '';
+  sort:number = 0;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
     private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService,
@@ -83,7 +85,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   LoadVideos()
   {
     this.SpinnerService.show();
-    let params = new HttpParams().set("userId",1).set("amp;favorites",true).set("row", 12);
+    let params = new HttpParams().set("userId",1).set("amp;favorites",true);
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
@@ -109,9 +111,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   }
 
   copyurl()
-  {
-
-  }
+  {}
 
   AddToFavrature(obj:any,i:number)
   {
@@ -149,10 +149,13 @@ export class VideosComponent implements OnInit,AfterViewChecked{
 
   showdetails(obj:Video)
   {
+    this.bookmarkobj = new Bookmark();
+    this.bookmarklst = [];
+    this.relatedvideos = [];
     this.videoobj = obj;
     this.selectedVideo(obj,false);
     this.showlist = false;
-    window.scroll({ top: 0, left: 0, behavior: 'smooth'});  
+    window.scroll({ top: 0, left: 0, behavior: 'smooth'});
     this.changeurl(obj.videoId);
     this.getrealtedvideos(obj.tags);
     this.getbookmarks();
@@ -160,12 +163,15 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   changeurl(videoId:number)
   {
     var url = window.location.origin;
-    var stateObj = { Title : "Spanos", Url: url + "/video?videoId="+videoId};       
+    var stateObj = { Title : "Spanos", Url: url + "/video?videoId="+videoId};
     history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
   showreldetails(item:Video)
   {
+    this.bookmarkobj = new Bookmark();
+    this.bookmarklst = [];
+    this.relatedvideos = [];
     this.videoobj = item;
     this.selectedVideo(item,true);
     this.showlist = false;
@@ -352,19 +358,25 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     });
     }
   }
-  deletebookmark(id:number)
+  deletebookmark(id:any)
   {
     this.SpinnerService.show();
-    this.apiServices.post('/DeleteBookmark',id).subscribe(data => {
+    this.apiServices.delete('/DeleteBookmark/',id).subscribe(data => {
       try{
-          if(data._http == 200){
+          if(data.success){
+            this.bookmarkobj = new Bookmark();
+            this.getbookmarks();
+            this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
+            this.toster.success(data.message);
             this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
         this.toster.error(data.message);
+        this.toster.error(data.message);
       }
+      this.SpinnerService.hide();
     });
   }
 
@@ -389,31 +401,60 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     }
   }
   backtolist()
-  {  
+  {
     if (videojs.getPlayers()[`videoPlay`]) {
     videojs.getPlayers()[`videoPlay`].dispose;}
     this.videoobj = {};
     this.showlist = true;
     this.router.navigate(['/video']);
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + "/video"};
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
-
   onSearch(event: any) {
-    this.count = 0;
-    const value = event.target.value;
-    if (value.length > 0 && value !="") {
-      this.searchResult = this.videoslst.filter((obj:any) => obj.title.toLowerCase().includes(value.toLowerCase()));
-      this.videoslst1=this.searchResult;
-      this.videoslst1 = this.searchResult.slice(0,12);
-      if( this.videoslst1.length<12){
-        this.showSpinner=false;
+    // this.count = 0;
+    // const value = event.target.value;
+    // if (value.length > 0 && value !="") {
+    //   this.searchResult = this.videoslst.filter((obj:any) => obj.title.toLowerCase().includes(value.toLowerCase()));
+    //   this.videoslst1=this.searchResult;
+    //   this.videoslst1 = this.searchResult.slice(0,12);
+    //   if( this.videoslst1.length<12){
+    //     this.showSpinner=false;
+    //   }
+    // }
+    // else{
+    //   this.videoslst1 = this.videoslst.slice(0,12);
+    //   this.searchResult.length=0;
+    //   this.count = 0;
+    // }
+    this.SpinnerService.show();
+    let params
+    if(this.keyword){
+     params = new HttpParams().set("keywords",this.keyword).set("userId",1).set("amp;favorites",true);}
+    else{params = new HttpParams().set("userId",1).set("amp;favorites",true);}
+    this.apiServices.get('/Videos?'+params).subscribe(data => {
+      try{
+        if (data) {
+          debugger;
+            this.videoslst = data.data;
+            this.videoslst.forEach((element:Video) => {
+              element.gif=element.file;
+              element.pic=element.file;
+              var re = /mp4/gi;
+              var newstr = element.gif.replace(re, "gif");
+              element.gif= "https://spanos.family/media/" + newstr;
+              var newPic = element.pic.replace(re, "jpg");
+              element.pic= "https://spanos.family/media/" + newPic;
+              element.src= "https://spanos.family/media/" + newPic;
+            });
+            this.videoslst1 = this.videoslst.slice(0,12);
+            this.SpinnerService.hide();
+        }
+      }catch{
+        this.SpinnerService.hide();
       }
-    }
-    else{
-      this.videoslst1 = this.videoslst.slice(0,12);
-      this.searchResult.length=0;
-      this.count = 0;
-    }
+    });
   }
 
   SearchByYear()
@@ -445,4 +486,79 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     }
   }
 
+  Sortvideolist()
+  {
+    this.SpinnerService.show();
+    let params = new HttpParams();
+    if(this.sort == 1){
+      params = new HttpParams().set("sort",'year').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+    }
+    else if(this.sort == 2){
+      params = new HttpParams().set("sort",'year').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+    }
+    else if(this.sort == 3){
+      params = new HttpParams().set("sort",'title').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+    }
+    else if(this.sort == 4){
+      params = new HttpParams().set("sort",'title').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+    }
+    else if(this.sort == 5){
+      params = new HttpParams().set("featuring",'year').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+    }
+    else if(this.sort == 6){
+      params = new HttpParams().set("featuring",'year').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+    }
+    else{
+      params = new HttpParams().set("userId",1).set("amp;favorites",true);
+    }
+    this.apiServices.get('/Videos?'+params).subscribe(data => {
+      try{
+        if (data) {
+          debugger;
+            this.videoslst = data.data;
+             this.videoslst.forEach((element:Video) => {
+              element.gif=element.file;
+              element.pic=element.file;
+              var re = /mp4/gi;
+              var newstr = element.gif.replace(re, "gif");
+              element.gif= "https://spanos.family/media/" + newstr;
+              var newPic = element.pic.replace(re, "jpg");
+              element.pic= "https://spanos.family/media/" + newPic;
+              element.src= "https://spanos.family/media/" + newPic;
+            });
+            this.videoslst1 = this.videoslst.slice(0,12);
+            this.SpinnerService.hide();
+        }
+      }catch{
+        this.SpinnerService.hide();
+      }
+    });
+  }
+
+  SearchByTags(tag:string)
+  {
+    this.SpinnerService.show();
+    let params = new HttpParams().set("userId",1).set("amp;favorites",true).set("tags",tag);
+    this.apiServices.get('/Videos?'+params).subscribe(data => {
+      try{
+        if (data) {
+            this.videoslst = data.data;
+            this.videoslst.forEach((element:Video) => {
+              element.gif=element.file;
+              element.pic=element.file;
+              var re = /mp4/gi;
+              var newstr = element.gif.replace(re, "gif");
+              element.gif= "https://spanos.family/media/" + newstr;
+              var newPic = element.pic.replace(re, "jpg");
+              element.pic= "https://spanos.family/media/" + newPic;
+              element.src= "https://spanos.family/media/" + newPic;
+            });
+            this.videoslst1 = this.videoslst.slice(0,12);
+            this.SpinnerService.hide();
+        }
+      }catch{
+        this.SpinnerService.hide();
+      }
+    });
+  }
 }

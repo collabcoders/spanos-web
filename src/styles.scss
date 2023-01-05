@@ -125,18 +125,29 @@ a:hover {
 	border-color:#0080C9;
 	color:#0080C9;
 }
+.text-primary{
+  color:#0080C9 !important;
+}
 .line-h1{
 	line-height: 22px;
 }
 .mt-n1{
 	margin-top:-13px;
 }
-.overflow-ellipsis {
-  background-color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.close{
+  margin-top:15px;
+  cursor: pointer;
 }
+.img-containers img{
+  object-fit: cover;
+  min-height: 140px;
+}
+// .overflow-ellipsis {
+//   background-color: #fff;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
 /*******************************Reset CSS For All Pages Ends Here***************************/
 .hero p{
 	color:#B3D9EF;
@@ -170,6 +181,7 @@ a:hover {
 .videos .img-container img{
   max-height: 210px;
   min-height: 210px;
+  object-fit: cover;
 }
 .videos .card .play{
 	background:rgba(0, 0, 0, 0.5);
@@ -225,6 +237,12 @@ a:hover {
 }
 .bookmarks a{
   font-size:12px;
+}
+.b-mark{
+  right:-10px;
+  border-radius:0 10px 10px 0 !important;
+  bottom: 0;
+  line-height: 30px;
 }
 @media (max-width:550px){
   .bookmarks, .bookmarks a{
