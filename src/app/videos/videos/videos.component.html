@@ -17,7 +17,7 @@
         <div class="row">
           <div class="col-lg-8 col-md-9 mt-4">
             <div class="search-bar position-relative shadow rounded-pill">
-              <input type="text" [(ngModel)]="keyword" class="form-control form-control-lg rounded-pill py-3 border-0" placeholder="Search Keyword" />
+              <input type="text" [(ngModel)]="keyword" (keydown.enter)="onSearch($event)" class="form-control form-control-lg rounded-pill py-3 border-0" placeholder="Search Keyword" />
               <a href="javascript:;" class="btn bg-white position-absolute bg-none" (click)="onSearch($event)"><i class="fas fa-search"></i></a>
             </div>
           </div>

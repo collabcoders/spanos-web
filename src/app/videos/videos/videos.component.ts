@@ -457,7 +457,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       params = new HttpParams().set("keywords",this.keyword).set("userId",1).set("amp;favorites",true);}
       else{params = new HttpParams().set("userId",1).set("amp;favorites",true);}
     }
-
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
@@ -479,6 +478,9 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         this.SpinnerService.hide();
       }
     });
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + this.url+"?"+params};
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
   SearchByYear()
@@ -554,7 +556,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         params = new HttpParams().set("userId",1).set("amp;favorites",true);
       }
     }
-
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
@@ -576,6 +577,9 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         this.SpinnerService.hide();
       }
     });
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + this.url+"?"+params};
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
   SearchByTags(tag:string)
@@ -603,6 +607,9 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         this.SpinnerService.hide();
       }
     });
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + this.url+"?"+params};
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
 }
