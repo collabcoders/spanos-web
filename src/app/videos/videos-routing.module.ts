@@ -5,7 +5,14 @@ import { VideosComponent } from './videos/videos.component';
 
 const routes: Routes = [
   {
-    path: 'video',
+    path: 'videos',
+    component: MainLayoutComponent,
+    children: [
+      { path: '', component: VideosComponent }
+    ]
+  },
+  {
+    path: 'favorities',
     component: MainLayoutComponent,
     children: [
       { path: '', component: VideosComponent }

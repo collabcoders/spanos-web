@@ -1,10 +1,11 @@
+
 <!-- list section -->
 <section *ngIf="showlist">
   <section class="hero bg-primary pt-1 mt-5 text-white">
       <div class="container py-5 mt-5">
         <div class="row">
           <div class="col-12">
-            <h1 class="display-5 fw-bold">Videos</h1>
+            <h1 class="display-5 fw-bold">{{pageHading}}</h1>
             <p class="mt-4 pb-5">The entire AGS Video Archive converted from tape to digital.</p>
           </div>
         </div>
@@ -50,7 +51,7 @@
       <div class="container pb-5">
         <div class="row">
           <div *ngFor="let obj of videoslst1;let i = index" class="col-lg-3 col-md-6 mt-5" >
-            <div class="card radius overflow-hidden border-0 position-relative h-100">
+            <div id="{{'pos-' + obj.videoId}}" class="card radius overflow-hidden border-0 position-relative h-100">
               <a href="javascript:;" [ngbTooltip]="obj.favoriteId > 0 ? 'Remove From Favs' : 'Add To Favs'" (click)="AddToFavrature(obj,i)" [ngClass]="{'heart-white':obj.favoriteId == 0,'heart-red':obj.favoriteId > 0}" class="heart-white position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
               <div class="position-relative text-center overflow-hidden img-container">
                 <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(i,false)" (mouseover)="showGif(i,false)" (click)="showdetails(obj)">
@@ -58,10 +59,12 @@
                 <img class="w-100 h-100" [src]="obj.src" />
               </div>
               <div class="card-body">
-                <h3 class="h5 fw-bold overflow-ellipsis"><a href="javascript:;" class="text-decoration-none text-dark" (click)="showdetails(obj)">{{obj.title}}</a></h3>
-                <span class="me-3 mt-1"><i class="fas fa-clock"></i> {{obj.duration}}</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span>
-                <span class="mt-1" *ngIf="obj.year > 0"><i class="fas fa-calendar"></i> Captured: {{obj.year}}</span>
-                <span class="mt-1" *ngIf="obj.year == 0"><i class="fas fa-calendar"></i> Captured: Unknown</span>
+                <h3 class="h5 fw-bold overflow-ellipsis"><a href="javascript:;" class="text-decoration-none text-dark" id="position" (click)="showdetails(obj)">{{obj.title}}</a></h3>
+                <!-- <span class="me-3 mt-1">Featuring:{{obj.featuring}}</span> -->
+                <span class="me-3 mt-1"><i class="fas fa-clock"></i> {{obj.duration}}</span>
+                <span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span>
+                <span class="me-3 mt-1" *ngIf="obj.year > 0"><i class="fas fa-calendar"></i> Captured: {{obj.year}}</span>
+                <span class="me-3 mt-1" *ngIf="obj.year == 0"><i class="fas fa-calendar"></i> Captured: Unknown</span>
                 <div class="clearfix"></div>
                 <span *ngFor="let tag of obj.tags | tags">
                  <a href="javascript:;" (click)="SearchByTags(tag)" class="bg-light p-2 text-decoration-none text-muted d-inline-block mt-3 me-2">{{tag}}</a> </span>
@@ -88,20 +91,20 @@
     <div class="container mt-5 pt-5">
       <div class="row mt-5">
         <div class="col-lg-8">
-          <a href="javascript:;" class="btn btn-link fw-bolder text-primary text-decoration-none mb-4" (click)="backtolist()"><i class="fas fa-arrow-left me-1"></i> BACK</a>
+          <a href="{{'#pos-' +this.videoobj.videoId}}" class="btn btn-link fw-bolder text-primary text-decoration-none mb-4" (click)="backtolist()"><i class="fas fa-arrow-left me-1"></i> BACK</a>
           <div class="rounded-4 overflow-hidden">
          <video id="videoPlay" class="video-js vjs-fluid vjs-default-skin" data-setup='{"controls": true, "autoplay": true, "preload": "auto"}'>
           <source [src]="videoobj.hls" type="application/x-mpegURL">
          </video>
           </div>
           <div class="row my-4">
-            <div class="col-lg-8 col-md-7 ps-md-0 mt-4">
+            <div class="col-lg-8 col-md-7 ps-md-0 mt-2">
               <div class="position-relative">
                 <input type="text" [(ngModel)]="bookmarkobj.title" class="form-control bg-light2 border-0 form-control-lg ps-4" placeholder="Bookmark Caption..." />
-                <a (click)="addupdatebookmark()" class="btn btn-primary rounded-3 py-2 px-3 fw-bold position-absolute top-0 b-mark" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Set Bookmark"><i class="fas fa-bookmark"></i></a>
+                <a (click)="addupdatebookmark()" class="btn btn-primary rounded-3 py-2 px-3 fw-bold position-absolute top-0 b-mark" ngbTooltip="Save Caption" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Set Bookmark"><i class="fas fa-bookmark"></i></a>
               </div>
             </div>
-            <div class="col-lg-4 col-md-5 pe-md-0 mt-4">
+            <div class="col-lg-4 col-md-5 pe-md-0 mt-2">
               <div class="float-end">
                 <a href="javascript:;" ngbTooltip="Share" class="btn btn-primary py-2 fw-bold mt-1 ms-2" (click)="copyurl()"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Share"><i class="fas fa-share"></i></a>
                 <a href="javascript:;" ngbTooltip="Edit" class="btn btn-primary py-2 fw-bold mt-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit"><i class="fas fa-pencil"></i></a>
@@ -109,20 +112,22 @@
               </div>
             </div>
           </div>
-          <div class="mb-2 pt-3">
+          <div class="mb-2">
             <div class="bookmarks float-start position-relative" *ngFor="let item of bookmarklst ;let a = index">
               <a href="javascript:;" class="text-white bg-primary py-2 ps-3 pe-5 rounded-pill text-decoration-none me-2 mt-2 d-block" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
-              <span (click)="deletebookmark(item.bookmarkId)" class="fas fa-times text-white position-absolute end-0 top-0 me-4 close"></span>
+              <span (click)="deletebookmark(item.bookmarkId)" ngbTooltip="Bookmark Delete" class="fas fa-times text-white position-absolute end-0 top-0 me-4 close"></span>
             </div>
             <div class="clearfix"></div>
           </div>
           <div class="clearfix"></div>
           <div class="row w-100">
             <div class="col-12 p-md-0">
-              <h2 class="h3 fw-bold my-4">{{videoobj.title}}</h2>
-              <small *ngIf="videoobj.year > 0" class="text-muted">Captured year: {{videoobj.year}}</small>
-              <small *ngIf="videoobj.year == 0" class="text-muted">Captured year: Unknown</small>
-              <p class="mt-4 line-h1">{{videoobj.description}}</p>
+              <h2 class="h3 fw-bold mt-2 mb-3">{{videoobj.title}}</h2>
+              <small class="text-muted mb-3">Featuring: <b>{{videoobj.featuring}}</b></small>
+              <div class="clearfix mb-2"></div>
+              <small *ngIf="videoobj.year > 0" class="text-muted">Captured year: <b>{{videoobj.year}}</b></small>
+              <small *ngIf="videoobj.year == 0" class="text-muted">Captured year: <b>Unknown</b></small>
+              <p class="mt-3 line-h1">{{videoobj.description}}</p>
             </div>
           </div>
           <div class="row mt-5">

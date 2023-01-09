@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, HostListener, Input, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, HostListener, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Video } from '@shared/models/video';
@@ -10,7 +10,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Bookmark } from '@shared/models/bookmark';
 import { Favorite } from '@shared/models/favorite';
 import { ToastrService } from 'ngx-toastr';
-
+import { ViewportScroller } from '@angular/common';
+declare var $: any;
 @Component({
   selector: 'app-videos',
   templateUrl: './videos.component.html'
@@ -35,10 +36,14 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   videoId: any;
   keyword:string = '';
   sort:number = 0;
+  url:string='';
+  pageHading:string='';
+  curPosition:number=0;
+  Position: any;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
     private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService,
-    private toster:ToastrService) {
+    private toster:ToastrService,private scroller: ViewportScroller) {
   }
   ngOnInit(): void {
     this.LoadVideos();
@@ -84,8 +89,19 @@ export class VideosComponent implements OnInit,AfterViewChecked{
 
   LoadVideos()
   {
+    this.url=window.location.pathname;
+    var params ;
+    if(this.url=="/favorities"){
+       params = new HttpParams().set("userId",1).set("favorites",true);
+       this.pageHading='Favorite Videos'
+       window.scroll({ top: 0, left: 0, behavior: 'smooth'});
+    }
+    else{
+       params = new HttpParams().set("userId",1).set("amp;favorites",true);
+       this.pageHading='Videos'
+       window.scroll({ top: 0, left: 0, behavior: 'smooth'});
+    }
     this.SpinnerService.show();
-    let params = new HttpParams().set("userId",1).set("amp;favorites",true);
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
@@ -103,8 +119,10 @@ export class VideosComponent implements OnInit,AfterViewChecked{
             this.videoslst1 = this.videoslst.slice(0,12);
             this.SpinnerService.hide();
             this.showdetailsfromparam();
+
         }
-      }catch{
+      }
+      catch{
         this.SpinnerService.hide();
       }
     });
@@ -153,6 +171,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.bookmarklst = [];
     this.relatedvideos = [];
     this.videoobj = obj;
+    this.Position = '#'+'pos-'+this.videoobj.videoId;
     this.selectedVideo(obj,false);
     this.showlist = false;
     window.scroll({ top: 0, left: 0, behavior: 'smooth'});
@@ -163,7 +182,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   changeurl(videoId:number)
   {
     var url = window.location.origin;
-    var stateObj = { Title : "Spanos", Url: url + "/video?videoId="+videoId};
+    var stateObj = { Title : "Spanos", Url: url + this.url + "?videoId="+videoId};
     history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
 
@@ -361,7 +380,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   deletebookmark(id:any)
   {
     this.SpinnerService.show();
-    this.apiServices.delete('/DeleteBookmark/',id).subscribe(data => {
+    this.apiServices.delete('/DeleteBookmark/'+ id).subscribe(data => {
       try{
           if(data.success){
             this.bookmarkobj = new Bookmark();
@@ -369,11 +388,9 @@ export class VideosComponent implements OnInit,AfterViewChecked{
             this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
             this.toster.success(data.message);
-            this.toster.success(data.message);
         }
       }catch{
         this.SpinnerService.hide();
-        this.toster.error(data.message);
         this.toster.error(data.message);
       }
       this.SpinnerService.hide();
@@ -406,11 +423,11 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     videojs.getPlayers()[`videoPlay`].dispose;}
     this.videoobj = {};
     this.showlist = true;
-    this.router.navigate(['/video']);
     var url = window.location.origin;
-    var stateObj = { Title : "Spanos", Url: url + "/video"};
+    var stateObj = { Title : "Spanos", Url: url + this.url};
     history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
+
 
   onSearch(event: any) {
     // this.count = 0;
@@ -430,13 +447,20 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     // }
     this.SpinnerService.show();
     let params
-    if(this.keyword){
-     params = new HttpParams().set("keywords",this.keyword).set("userId",1).set("amp;favorites",true);}
-    else{params = new HttpParams().set("userId",1).set("amp;favorites",true);}
+    if(this.url=="/favorities"){
+     if(this.keyword){
+     params = new HttpParams().set("keywords",this.keyword).set("userId",1).set("favorites",true);}
+     else{params = new HttpParams().set("userId",1).set("favorites",true);}
+    }
+    else{
+      if(this.keyword){
+      params = new HttpParams().set("keywords",this.keyword).set("userId",1).set("amp;favorites",true);}
+      else{params = new HttpParams().set("userId",1).set("amp;favorites",true);}
+    }
+
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
-          debugger;
             this.videoslst = data.data;
             this.videoslst.forEach((element:Video) => {
               element.gif=element.file;
@@ -459,20 +483,14 @@ export class VideosComponent implements OnInit,AfterViewChecked{
 
   SearchByYear()
   {
-    //  this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
-    //  if(this.year == -1)
-    //  {
-    //   this.searchResult = [];
-    //   this.videoslst = [];
-    //   this.LoadVideos();
-    //  }else
-    //  {
-    //   this.videoslst1 = this.searchResult;
-    //  }
-
     this.count = 0;
     if (this.year != -1) {
-      this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
+      if(this.url=="/favorities"){
+        this.searchResult = this.videoslst.filter((a:any) => a.year == this.year && a.favoriteId>0);
+      }
+      else{
+        this.searchResult = this.videoslst.filter((a:any) => a.year == this.year);
+      }
       this.videoslst1=this.searchResult;
       this.videoslst1 = this.searchResult.slice(0,12);
       if( this.videoslst1.length<12){
@@ -490,31 +508,56 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   {
     this.SpinnerService.show();
     let params = new HttpParams();
-    if(this.sort == 1){
-      params = new HttpParams().set("sort",'year').set("dir",'asc').set("userId",1).set("amp;favorites",true);
-    }
-    else if(this.sort == 2){
-      params = new HttpParams().set("sort",'year').set("dir",'desc').set("userId",1).set("amp;favorites",true);
-    }
-    else if(this.sort == 3){
-      params = new HttpParams().set("sort",'title').set("dir",'asc').set("userId",1).set("amp;favorites",true);
-    }
-    else if(this.sort == 4){
-      params = new HttpParams().set("sort",'title').set("dir",'desc').set("userId",1).set("amp;favorites",true);
-    }
-    else if(this.sort == 5){
-      params = new HttpParams().set("featuring",'year').set("dir",'asc').set("userId",1).set("amp;favorites",true);
-    }
-    else if(this.sort == 6){
-      params = new HttpParams().set("featuring",'year').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+    if(this.url=="/favorities"){
+      if(this.sort == 1){
+        params = new HttpParams().set("sort",'year').set("dir",'asc').set("userId",1).set("favorites",true);
+      }
+      else if(this.sort == 2){
+        params = new HttpParams().set("sort",'year').set("dir",'desc').set("userId",1).set("favorites",true);
+      }
+      else if(this.sort == 3){
+        params = new HttpParams().set("sort",'title').set("dir",'asc').set("userId",1).set("favorites",true);
+      }
+      else if(this.sort == 4){
+        params = new HttpParams().set("sort",'title').set("dir",'desc').set("userId",1).set("favorites",true);
+      }
+      else if(this.sort == 5){
+        params = new HttpParams().set("featuring",'year').set("dir",'asc').set("userId",1).set("favorites",true);
+      }
+      else if(this.sort == 6){
+        params = new HttpParams().set("featuring",'year').set("dir",'desc').set("userId",1).set("favorites",true);
+      }
+      else{
+        params = new HttpParams().set("userId",1).set("favorites",true);
+      }
     }
     else{
-      params = new HttpParams().set("userId",1).set("amp;favorites",true);
+      if(this.sort == 1){
+        params = new HttpParams().set("sort",'year').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+      }
+      else if(this.sort == 2){
+        params = new HttpParams().set("sort",'year').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+      }
+      else if(this.sort == 3){
+        params = new HttpParams().set("sort",'title').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+      }
+      else if(this.sort == 4){
+        params = new HttpParams().set("sort",'title').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+      }
+      else if(this.sort == 5){
+        params = new HttpParams().set("sort",'featuring').set("dir",'asc').set("userId",1).set("amp;favorites",true);
+      }
+      else if(this.sort == 6){
+        params = new HttpParams().set("sort",'featuring').set("dir",'desc').set("userId",1).set("amp;favorites",true);
+      }
+      else{
+        params = new HttpParams().set("userId",1).set("amp;favorites",true);
+      }
     }
+
     this.apiServices.get('/Videos?'+params).subscribe(data => {
       try{
         if (data) {
-          debugger;
             this.videoslst = data.data;
              this.videoslst.forEach((element:Video) => {
               element.gif=element.file;
@@ -561,4 +604,5 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       }
     });
   }
+
 }

@@ -68,9 +68,35 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
       }
     });
   }
-
+  SearchByTags(tag:string)
+  {
+    this.SpinnerService.show();
+    let params = new HttpParams().set("userId",1).set("favorites",true).set("row", 12).set("tags",tag);
+    this.apiServices.get('/Videos?'+params).subscribe(data => {
+      try{
+        if (data) {
+            this.videoslst = data.data;
+            this.videoslst.forEach((element:Video) => {
+              element.gif=element.file;
+              element.pic=element.file;
+              var re = /mp4/gi;
+              var newstr = element.gif.replace(re, "gif");
+              element.gif= "https://spanos.family/media/" + newstr;
+              var newPic = element.pic.replace(re, "jpg");
+              element.pic= "https://spanos.family/media/" + newPic;
+              element.src= "https://spanos.family/media/" + newPic;
+            });
+            this.videoslst1 = this.videoslst.slice(0,12);
+            this.SpinnerService.hide();
+        }
+      }catch{
+        this.SpinnerService.hide();
+      }
+    });
+  }
   LoadFavoriteVideos()
   {
+    debugger;
     this.SpinnerService.show();
     let params = new HttpParams().set("userId",1).set("favorites",true).set("row", 12);
     this.apiServices.get('/Videos?'+params).subscribe(data => {
@@ -368,6 +394,9 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
     videojs.getPlayers()[`videoPlay`].dispose;}
     this.videoobj = {};
     this.showlist = true;
+    var url = window.location.origin;
+    var stateObj = { Title : "Spanos", Url: url + "/favorities"};       
+    history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
   onSearch(event: any) {
     this.count = 0;

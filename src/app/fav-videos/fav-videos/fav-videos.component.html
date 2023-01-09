@@ -38,7 +38,7 @@
         <div class="row">
           <div *ngFor="let obj of videoslst1;let i = index" class="col-lg-3 col-md-6 mt-5" >
             <div class="card radius overflow-hidden border-0 position-relative h-100">
-              <a href="javascript:;" (click)="AddToFavrature(obj,i)" [ngClass]="{'heart-white':obj.favoriteId == 0,'heart-red':obj.favoriteId > 0}" class="heart-white position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
+              <a href="javascript:;" [ngbTooltip]="obj.favoriteId > 0 ? 'Remove From Favs' : 'Add To Favs'" (click)="AddToFavrature(obj,i)" [ngClass]="{'heart-white':obj.favoriteId == 0,'heart-red':obj.favoriteId > 0}" class="heart-white position-absolute end-0 top-0 mt-3 me-3 z-index"><i class="fas fa-heart"></i></a>
               <div class="position-relative text-center overflow-hidden img-container">
                 <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(i,false)" (mouseover)="showGif(i,false)" (click)="showdetails(obj)">
                 <p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
@@ -49,7 +49,7 @@
                 <span class="me-3 mt-1"><i class="fas fa-clock"></i> {{obj.duration}}</span><span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span><span class="mt-1"><i class="fas fa-calendar"></i> Captured: {{obj.year}}</span>
                 <div class="clearfix"></div>
                 <span *ngFor="let tag of obj.tags | reltags">
-                 <p class="bg-light p-2 text-decoration-none text-muted d-inline-block mt-3 me-2">{{tag}}</p> </span>
+                 <a href="javascript:;" (click)="SearchByTags(tag)" class="bg-light p-2 text-decoration-none text-muted d-inline-block mt-3 me-2">{{tag}}</a> </span>
               </div>
             </div>
             </div>
