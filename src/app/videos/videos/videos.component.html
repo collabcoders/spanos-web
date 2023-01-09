@@ -60,7 +60,8 @@
               </div>
               <div class="card-body">
                 <h3 class="h5 fw-bold overflow-ellipsis"><a href="javascript:;" class="text-decoration-none text-dark" id="position" (click)="showdetails(obj)">{{obj.title}}</a></h3>
-                <!-- <span class="me-3 mt-1">Featuring:{{obj.featuring}}</span> -->
+                <span class="me-3 mt-1">Featuring: <b>{{obj.featuring}}</b></span>
+                <div class="clearfix mb-2"></div>
                 <span class="me-3 mt-1"><i class="fas fa-clock"></i> {{obj.duration}}</span>
                 <span class="me-3 mt-1"><i class="fas fa-comment"></i> 234</span>
                 <span class="me-3 mt-1" *ngIf="obj.year > 0"><i class="fas fa-calendar"></i> Captured: {{obj.year}}</span>
