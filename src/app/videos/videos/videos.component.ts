@@ -11,6 +11,7 @@ import { Bookmark } from '@shared/models/bookmark';
 import { Favorite } from '@shared/models/favorite';
 import { ToastrService } from 'ngx-toastr';
 import { ViewportScroller } from '@angular/common';
+import { Comment } from '@shared/models/comment';
 declare var $: any;
 @Component({
   selector: 'app-videos',
@@ -25,6 +26,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   showlist: boolean = true;
   videoobj: any;
   bookmarkobj = new Bookmark();
+  commentobj = new Comment();
   favobj = new Favorite();
   count = 0;
   year:number = -1;
@@ -40,6 +42,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   pageHading:string='';
   curPosition:number=0;
   Position: any;
+  commentlst: any;
 
   constructor(private apiServices: ApiService,private route: ActivatedRoute,public sanitizer: DomSanitizer,
     private videoService: VideoService,private router:Router,private SpinnerService: NgxSpinnerService,
@@ -155,7 +158,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
           if(data.success){
             this.favobj = new Favorite();
             this.LoadVideos();
-            this.toster.success(data.message);
+            this.toster.info(data.message);
           }
       }catch{
         this.SpinnerService.hide();
@@ -178,6 +181,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.changeurl(obj.videoId);
     this.getrealtedvideos(obj.tags);
     this.getbookmarks();
+    this.getcomment();
   }
   changeurl(videoId:number)
   {
@@ -198,6 +202,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.changeurl(item.videoId);
     this.getbookmarks();
     this.getrealtedvideos(item.tags);
+    this.getcomment();
   }
 
   downloadvideo() {
@@ -335,7 +340,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
       }catch{
       }
     });
-
   }
   addupdatebookmark()
   {
@@ -387,7 +391,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
             this.getbookmarks();
             this.selectedVideo(this.videoobj,false);
             this.SpinnerService.hide();
-            this.toster.success(data.message);
+            this.toster.info(data.message);
         }
       }catch{
         this.SpinnerService.hide();
@@ -611,5 +615,62 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     var stateObj = { Title : "Spanos", Url: url + this.url+"?"+params};
     history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
+
+  isvideoedit:boolean= false;
+  onvideoedit()
+  {
+    this.isvideoedit = !this.isvideoedit
+  }
+
+  UpdateVideo(obj:Video)
+  {
+    this.SpinnerService.show();
+    this.apiServices.put('/UpdateVideo',obj).subscribe(data => {
+      try{
+          if(data.success){
+            this.selectedVideo(this.videoobj,false);
+            this.SpinnerService.hide();
+            this.toster.success(data.message);
+            this.isvideoedit = false;
+          }
+      }catch{
+        this.SpinnerService.hide();
+        this.toster.error(data.message);
+      }
+    });
+  }
+  addcomment()
+  {
+    this.SpinnerService.show();
+    this.commentobj.mediaId = this.videoobj.videoId;
+    this.commentobj.userId = 9;
+    this.apiServices.post('/AddComment',this.commentobj).subscribe(data => {
+      try{
+          if(data.success){
+            this.commentobj = new Comment();
+            this.getcomment();
+            this.selectedVideo(this.videoobj,false);
+            this.SpinnerService.hide();
+            this.toster.success(data.message);
+        }
+      }catch{
+        this.SpinnerService.hide();
+        this.toster.error(data.message);
+      }
+    });
+  }
+  getcomment()
+  {
+    this.apiServices.get('/Comments/'+this.videoobj.videoId).subscribe(data => {
+      try{
+        if (data) {
+          debugger
+          this.commentlst = data.data;
+        }
+      }catch{
+      }
+    });
+  }
+
 
 }

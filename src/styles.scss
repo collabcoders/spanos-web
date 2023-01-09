@@ -248,6 +248,9 @@ a:hover {
   bottom: 0;
   line-height: 30px;
 }
+.r-pills{
+  border-radius:0 40px 40px 0 !important;
+}
 @media (max-width:550px){
   .bookmarks, .bookmarks a{
     display:block !important;
