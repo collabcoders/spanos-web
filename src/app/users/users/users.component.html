@@ -1,0 +1,211 @@
+<section class="add-user" *ngIf="!showlist">
+  <section class="hero bg-primary pt-1 mt-5 text-white">
+    <div class="container py-5 mt-5">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h1 class="display-5 fw-bold mt-5">Add User</h1>
+          <p class="mt-3 pb-5 mb-5">Please fill all the column below</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="form-users mb-5 pb-5">
+    <div class="container pb-5">
+      <div class="row">
+        <div class="col-lg-2 col-md-1"></div>
+        <div class="col-lg-8 col-md-10 px-0">
+          <div class="form-inner bg-white p-5 shadow">
+            <div class="row">
+              <div class="col-12 text-center mt-3 mb-4">
+                <div class="position-relative input-uplaod"> <img src="../../../assets/images/add-img.png" alt="Image" class="img-fluid" />
+                  <input type="file" name="file" class="form-control position-absolute top-0 start-0 end-0 m-auto rounded-circle opacity-0" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mt-3 mb-3">
+                  <label for="field1" class="form-label mb-3 text-muted">First Name</label>
+                  <input type="text" class="form-control py-3 rounded-pill" id="field1" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mt-3 mb-3">
+                  <label for="field2" class="form-label mb-3 text-muted">Last Name</label>
+                  <input type="text" class="form-control py-3 rounded-pill" id="field2" />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mt-3 mb-3">
+                  <label for="field3" class="form-label mb-3 text-muted">Phone</label>
+                  <input type="text" class="form-control py-3 rounded-pill" id="field3" />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mt-3 mb-3">
+                  <label for="field4" class="form-label mb-3 text-muted">Email</label>
+                  <input type="text" class="form-control py-3 rounded-pill" id="field4" />
+                </div>
+              </div>
+              <div class="col-md-12">
+                <label class="form-label mb-3 text-muted w-100 mt-3">Access</label>
+                <div class="mb-3 w-radio float-start me-4">
+                  <input type="radio" class="btn-check" checked name="options-outlined" id="secondary-outlined" autocomplete="off" />
+                  <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined">Admin</label>
+                </div>
+                <div class="mb-3 w-radio float-start me-4">
+                  <input type="radio" class="btn-check" name="options-outlined" id="secondary-outlined2" autocomplete="off" />
+                  <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined2">Contributer</label>
+                </div>
+                <div class="mb-3 w-radio float-start">
+                  <input type="radio" class="btn-check" name="options-outlined" id="secondary-outlined3" autocomplete="off" />
+                  <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined3">Read Only</label>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+              <div class="col-md-12"> <a (click)="adduser()" href="javascript:;" class="btn btn-primary p-3 w-100 rounded-pill mt-5 mb-2">Add User</a> </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-1"></div>
+      </div>
+    </div>
+  </section>
+</section>
+
+<section class="users" *ngIf="showlist">
+  <section class="hero bg-primary pt-1 mt-5 text-white">
+    <div class="container py-5 mt-5">
+      <div class="row">
+        <div class="col-12">
+          <h1 class="display-5 fw-bold">Users</h1>
+          <p class="mt-4 pb-5">You can find. delete and add users here</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="search pb-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-10 col-md-9 mt-4">
+          <div class="search-bar position-relative shadow rounded-pill">
+            <input type="text" class="form-control form-control-lg rounded-pill py-3 border-0" placeholder="Search Keyword" />
+            <a href="javascript:;" class="btn bg-white position-absolute bg-none"><i class="fas fa-search"></i></a> </div>
+        </div>
+        <div class="col-lg-2 col-md-3 mt-4">
+          <div class="search-bar position-relative shadow rounded-pill"> <a (click)="adduser()" href="javascript:;" class="btn bg-white w-100 rounded-pill shadow text-primary fw-bold add-users"><i class="fas fa-plus"></i> Add User</a> </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="users-table mt-2 mb-5">
+    <div class="container pb-5">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-outer table-responsive radius bg-white shadow">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th scope="col" class="text-start fw-normal text-muted">First Name</th>
+                  <th scope="col" class="text-start fw-normal text-muted">Last Name</th>
+                  <th scope="col" class="text-center fw-normal text-muted">Phone</th>
+                  <th scope="col" class="text-center fw-normal text-muted">Email</th>
+                  <th scope="col" class="text-center fw-normal text-muted">Access</th>
+                  <th scope="col" class="text-center fw-normal text-muted">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
+                  <td class="text-start"><strong>Doe</strong></td>
+                  <td class="text-center"><strong>+12 215 512 65</strong></td>
+                  <td class="text-center"><strong>email@email.com</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
+                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                </tr>
+                <tr class="border-0">
+                  <td colspan="7" class="text-center"></td>
+                </tr>
+                <tr class="border-0">
+                  <td colspan="7" class="text-center pt-2"><a href="javascript:;" class="text-dark text-decoration-none">Show More <i class="fas fa-angle-down ms-3"></i></a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

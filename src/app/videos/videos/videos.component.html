@@ -56,7 +56,7 @@
               <div class="position-relative text-center overflow-hidden img-container">
                 <a class="gif-link position-absolute start-0 end-0 bottom-0 top-0" (mouseout)="showScreenshot(i,false)" (mouseover)="showGif(i,false)" (click)="showdetails(obj)">
                 <p class="play radius text-center rounded-circle position-absolute mx-auto start-0 end-0"><i class="fas fa-play text-white"></i></p></a>
-                <img class="w-100 h-100" [src]="obj.src" />
+                <img class="w-100 h-100" [lazyLoad]="obj.src" [defaultImage]="obj.src"/>
               </div>
               <div class="card-body">
                 <h3 class="h5 fw-bold overflow-ellipsis"><a href="javascript:;" class="text-decoration-none text-dark" id="position" (click)="showdetails(obj)">{{obj.title}}</a></h3>
@@ -115,7 +115,8 @@
           </div>
           <div class="mb-2">
             <div class="bookmarks float-start position-relative" *ngFor="let item of bookmarklst ;let a = index">
-              <a href="javascript:;" class="text-white bg-primary py-2 ps-3 pe-5 rounded-pill text-decoration-none me-2 mt-2 d-block" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
+              <!-- <a href="javascript:;" class="text-white bg-primary py-2 ps-3 pe-5 rounded-pill text-decoration-none me-2 mt-2 d-block" (click)="editbookmark(item)"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a> -->
+              <a class="text-white bg-primary py-2 ps-3 pe-5 rounded-pill text-decoration-none me-2 mt-2 d-block"><i class="fas fa-bookmark me-2"></i> {{item.title}} ({{changetimeformate(item.time)}})</a>
               <span (click)="deletebookmark(item.bookmarkId)" ngbTooltip="Bookmark Delete" class="fas fa-times text-white position-absolute end-0 top-0 me-4 close"></span>
             </div>
             <div class="clearfix"></div>

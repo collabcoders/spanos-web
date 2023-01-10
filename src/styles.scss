@@ -135,6 +135,9 @@ a:hover {
 .line-h1{
 	line-height: 22px;
 }
+.text-danger{
+  color:#FF5555 !important;
+}
 .mt-n1{
 	margin-top:-13px;
 }
@@ -250,6 +253,42 @@ a:hover {
 }
 .r-pills{
   border-radius:0 40px 40px 0 !important;
+}
+.add-users{
+  padding:18px 10px;
+}
+.table-outer table th, .table-outer table td{
+  padding:30px 15px;
+  vertical-align: middle;
+}
+.table-outer table tbody tr{
+  border-top:1px solid #EEE;
+}
+.table-outer table td small{
+  font-size:11px;
+  line-height: 13px;
+}
+.form-inner{
+  border-radius:18px;
+  border-top: 8px solid #5EC3FE;
+  margin-top:-90px;
+}
+.input-uplaod input{
+  width:150px;
+  height:150px;
+}
+.w-radio{
+  width:120px;
+}
+.w-radio .btn-outline-secondary{
+  border-color:#CCC;
+  font-weight: normal !important;
+}
+.w-radio .btn-check:checked+.btn, .w-radio .btn.active, .w-radio .btn.show, .w-radio .btn:first-child:active, .w-radio :not(.btn-check)+.btn:active{
+  background: #FFF;
+  color:#0080C9;
+  border-color:#0080C9;
+  font-weight: bold !important;
 }
 @media (max-width:550px){
   .bookmarks, .bookmarks a{

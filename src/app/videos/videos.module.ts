@@ -8,6 +8,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LazyLoadImageModule,LAZYLOAD_IMAGE_HOOKS, ScrollHooks } from 'ng-lazyload-image';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         NgxSpinnerModule,
         BrowserAnimationsModule,
         FormsModule,
-        NgbModule
-    ]
+        NgbModule,
+        LazyLoadImageModule
+    ],
+    providers: [{ provide: LAZYLOAD_IMAGE_HOOKS, useClass: ScrollHooks }]
 })
 export class VideosModule { }

@@ -116,8 +116,8 @@ export class VideosComponent implements OnInit,AfterViewChecked{
               var newstr = element.gif.replace(re, "gif");
               element.gif= "https://spanos.family/media/" + newstr;
               var newPic = element.pic.replace(re, "jpg");
-              element.pic= "https://spanos.family/media/" + newPic;
-              element.src= "https://spanos.family/media/" + newPic;
+              element.pic= "https://api.spanos.family/images/?img=" + newPic +"&max=500";
+              element.src= "https://api.spanos.family/images/?img=" + newPic +"&max=500";
             });
             this.videoslst1 = this.videoslst.slice(0,12);
             this.SpinnerService.hide();
@@ -318,11 +318,11 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     var y = seconds < 10 ? "0" + seconds : seconds;
     return x+":"+y;
   }
-  editbookmark(item:Bookmark)
-  {
-    this.bookmarkobj = Object.assign({}, item);
-    this.setCurrentTime(this.bookmarkobj.time);
-  }
+  // editbookmark(item:Bookmark)
+  // {
+  //   this.bookmarkobj = Object.assign({}, item);
+  //   this.setCurrentTime(this.bookmarkobj.time);
+  // }
 
   setCurrentTime(time:number)
   {
@@ -344,7 +344,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
   addupdatebookmark()
   {
     this.SpinnerService.show();
-    if(this.bookmarkobj.bookmarkId == 0){
+    // if(this.bookmarkobj.bookmarkId == 0){
     this.bookmarkobj.time = this.getCurrentTime();
     this.bookmarkobj.videoId = this.videoobj.videoId;
     this.bookmarkobj.userId = 1;
@@ -362,24 +362,24 @@ export class VideosComponent implements OnInit,AfterViewChecked{
         this.toster.error(data.message);
       }
     });
-    }
-    else{
-    this.SpinnerService.show();
-    this.apiServices.put('/UpdateBookmark',this.bookmarkobj).subscribe(data => {
-      try{
-          if(data.success){
-            this.bookmarkobj = new Bookmark();
-            this.getbookmarks();
-            this.selectedVideo(this.videoobj,false);
-            this.SpinnerService.hide();
-            this.toster.success(data.message);
-          }
-      }catch{
-        this.SpinnerService.hide();
-        this.toster.error(data.message);
-      }
-    });
-    }
+    // }
+    // else{
+    // this.SpinnerService.show();
+    // this.apiServices.put('/UpdateBookmark',this.bookmarkobj).subscribe(data => {
+    //   try{
+    //       if(data.success){
+    //         this.bookmarkobj = new Bookmark();
+    //         this.getbookmarks();
+    //         this.selectedVideo(this.videoobj,false);
+    //         this.SpinnerService.hide();
+    //         this.toster.success(data.message);
+    //       }
+    //   }catch{
+    //     this.SpinnerService.hide();
+    //     this.toster.error(data.message);
+    //   }
+    // });
+    // }
   }
   deletebookmark(id:any)
   {
@@ -431,7 +431,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     var stateObj = { Title : "Spanos", Url: url + this.url};
     history.pushState(stateObj, stateObj.Title, stateObj.Url);
   }
-
 
   onSearch(event: any) {
     // this.count = 0;
@@ -664,13 +663,10 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     this.apiServices.get('/Comments/'+this.videoobj.videoId).subscribe(data => {
       try{
         if (data) {
-          debugger
           this.commentlst = data.data;
         }
       }catch{
       }
     });
   }
-
-
 }

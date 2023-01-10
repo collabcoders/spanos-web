@@ -1,3 +1,4 @@
+import { LoginModule } from './login/login.module';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -9,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FavVideosModule } from './fav-videos/fav-videos.module';
 import { LayoutModule } from './layout/layout.module';
+import { UsersModule } from './users/users.module';
 import { VideosModule } from './videos/videos.module';
 import { VideoPlayerComponent } from './_shared/components/video-player/video-player.component';
 
@@ -23,6 +25,9 @@ import { VideoPlayerComponent } from './_shared/components/video-player/video-pl
     LayoutModule,
     VideosModule,
     FavVideosModule,
+    UsersModule,
+    LoginModule,
+    UsersModule,
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
