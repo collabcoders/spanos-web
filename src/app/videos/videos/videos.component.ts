@@ -288,7 +288,7 @@ export class VideosComponent implements OnInit,AfterViewChecked{
                 var newstr = element.gif.replace(re, "gif");
                 element.gif= "https://spanos.family/media/" + newstr;
                 var newPic = element.pic.replace(re, "jpg");
-                element.pic= "https://spanos.family/media/" + newPic;
+                element.pic= "https://api.spanos.family/images/?img=" + newPic +"&max=500";
                 element.src= element.pic;
             });
             }
@@ -318,14 +318,15 @@ export class VideosComponent implements OnInit,AfterViewChecked{
     var y = seconds < 10 ? "0" + seconds : seconds;
     return x+":"+y;
   }
-  // editbookmark(item:Bookmark)
-  // {
-  //   this.bookmarkobj = Object.assign({}, item);
-  //   this.setCurrentTime(this.bookmarkobj.time);
-  // }
+  editbookmark(item:any)
+  {
+    this.bookmarkobj.time = item;
+    this.setCurrentTime(this.bookmarkobj.time);
+  }
 
   setCurrentTime(time:number)
   {
+    debugger;
     var player = videojs('videoPlay');
     player.currentTime(time);
   }

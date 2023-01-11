@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  webBaseUrl: 'http://localhost:4200'
+  webBaseUrl: 'http://localhost:4200',
+  api:'https://api.spanos.family'
 };
 
 /*

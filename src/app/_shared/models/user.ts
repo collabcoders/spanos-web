@@ -11,17 +11,17 @@ export class User {
     disable: boolean;
     dateAdded: Date;
     constructor(
-        userId: number,
-        email: string,
-        phone: string,
-        fname: string,
-        lname: string,
-        password: string,
-        image: string,
-        access: string,
-        token: string,
-        disable: boolean,
-        dateAdded: Date
+        userId: number = 0,
+        email: string= '',
+        phone: string= '',
+        fname: string= '',
+        lname: string= '',
+        password: string= '',
+        image: string= '',
+        access: string= '',
+        token: string= '',
+        disable: boolean= false,
+        dateAdded: Date = new Date()
     ) {
         this.userId = userId;
         this.email = email;

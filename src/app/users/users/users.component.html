@@ -15,53 +15,71 @@
         <div class="col-lg-2 col-md-1"></div>
         <div class="col-lg-8 col-md-10 px-0">
           <div class="form-inner bg-white p-5 shadow">
-            <div class="row">
-              <div class="col-12 text-center mt-3 mb-4">
-                <div class="position-relative input-uplaod"> <img src="../../../assets/images/add-img.png" alt="Image" class="img-fluid" />
-                  <input type="file" name="file" class="form-control position-absolute top-0 start-0 end-0 m-auto rounded-circle opacity-0" />
+            <div class="row d-flex align-items-ceter justify-content-center">
+              <div class="text-center mt-3 mb-4 col-12">
+                <div class="position-relative input-uplaod"><img [src]="cropImgPreview"
+                  onError="this.src='../../../assets/images/add-img.png'" class="img-fluid rounded-circle cropped" width="150" height="150" />
+                  <input input id="file-input" type="file" name="file" #fileInput
+                  (change)="onChange($event, fileInput.files![0])" class="form-control position-absolute top-0 start-0 end-0 m-auto rounded-circle opacity-0 " />
                 </div>
               </div>
+              <div class="col-12 text-center">
+                <image-cropper [imageChangedEvent]="imgChangeEvt" [maintainAspectRatio]="true"
+              [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" backgroundColor="#262626"
+              (imageCropped)="cropImg($event)" (imageLoaded)="imgLoad()"
+              (cropperReady)="initCropper()" (loadImageFailed)="imgFailed()"
+              style="visibility: hidden;"> </image-cropper>
+              </div>
+              <div class="d-flex justify-content-center">
+                <div class="progress" *ngIf="!infoMessage">
+                  <progress class="progress-bar bg-success" aria-valuemin="0"
+              [attr.aria-valuenow]="progress" max="100"
+              [ngStyle]="{'width.%': progress}"></progress>
+                </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-md-6">
                 <div class="mt-3 mb-3">
                   <label for="field1" class="form-label mb-3 text-muted">First Name</label>
-                  <input type="text" class="form-control py-3 rounded-pill" id="field1" />
+                  <input type="text" [(ngModel)]="userobj.fname" class="form-control py-3 rounded-pill" id="field1" />
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="mt-3 mb-3">
                   <label for="field2" class="form-label mb-3 text-muted">Last Name</label>
-                  <input type="text" class="form-control py-3 rounded-pill" id="field2" />
+                  <input type="text" [(ngModel)]="userobj.lname" class="form-control py-3 rounded-pill" id="field2" />
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="mt-3 mb-3">
                   <label for="field3" class="form-label mb-3 text-muted">Phone</label>
-                  <input type="text" class="form-control py-3 rounded-pill" id="field3" />
+                  <input type="text" [(ngModel)]="userobj.phone" class="form-control py-3 rounded-pill" id="field3" />
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="mt-3 mb-3">
                   <label for="field4" class="form-label mb-3 text-muted">Email</label>
-                  <input type="text" class="form-control py-3 rounded-pill" id="field4" />
+                  <input type="email" [(ngModel)]="userobj.email" class="form-control py-3 rounded-pill" id="field4" />
                 </div>
               </div>
               <div class="col-md-12">
                 <label class="form-label mb-3 text-muted w-100 mt-3">Access</label>
                 <div class="mb-3 w-radio float-start me-4">
-                  <input type="radio" class="btn-check" checked name="options-outlined" id="secondary-outlined" autocomplete="off" />
+                  <input type="radio" [(ngModel)]="userobj.access" value="Admin" class="btn-check" checked name="options-outlined" id="secondary-outlined" autocomplete="off" />
                   <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined">Admin</label>
                 </div>
                 <div class="mb-3 w-radio float-start me-4">
-                  <input type="radio" class="btn-check" name="options-outlined" id="secondary-outlined2" autocomplete="off" />
+                  <input type="radio" [(ngModel)]="userobj.access" value="Contributer" class="btn-check" name="options-outlined" id="secondary-outlined2" autocomplete="off" />
                   <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined2">Contributer</label>
                 </div>
                 <div class="mb-3 w-radio float-start">
-                  <input type="radio" class="btn-check" name="options-outlined" id="secondary-outlined3" autocomplete="off" />
+                  <input type="radio" [(ngModel)]="userobj.access" value="Read Only" class="btn-check" name="options-outlined" id="secondary-outlined3" autocomplete="off" />
                   <label class="btn btn-outline-secondary p-2 fw-bold rounded-pill w-100" for="secondary-outlined3">Read Only</label>
                 </div>
                 <div class="clearfix"></div>
               </div>
-              <div class="col-md-12"> <a (click)="adduser()" href="javascript:;" class="btn btn-primary p-3 w-100 rounded-pill mt-5 mb-2">Add User</a> </div>
+              <div class="col-md-12"> <a (click)="AddUpdateuser()" href="javascript:;" class="btn btn-primary p-3 w-100 rounded-pill mt-5 mb-2">Add User</a> </div>
             </div>
           </div>
         </div>
@@ -70,7 +88,9 @@
     </div>
   </section>
 </section>
-
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+  <div class="spinner-border" style="color: white" role="status"></div>
+</ngx-spinner>
 <section class="users" *ngIf="showlist">
   <section class="hero bg-primary pt-1 mt-5 text-white">
     <div class="container py-5 mt-5">
@@ -91,7 +111,7 @@
             <a href="javascript:;" class="btn bg-white position-absolute bg-none"><i class="fas fa-search"></i></a> </div>
         </div>
         <div class="col-lg-2 col-md-3 mt-4">
-          <div class="search-bar position-relative shadow rounded-pill"> <a (click)="adduser()" href="javascript:;" class="btn bg-white w-100 rounded-pill shadow text-primary fw-bold add-users"><i class="fas fa-plus"></i> Add User</a> </div>
+          <div class="search-bar position-relative shadow rounded-pill"> <a (click)="showhidemain()" href="javascript:;" class="btn bg-white w-100 rounded-pill shadow text-primary fw-bold add-users"><i class="fas fa-plus"></i> Add User</a> </div>
         </div>
       </div>
     </div>
@@ -105,95 +125,23 @@
               <thead>
                 <tr>
                   <th></th>
-                  <th scope="col" class="text-start fw-normal text-muted">First Name</th>
-                  <th scope="col" class="text-start fw-normal text-muted">Last Name</th>
+                  <th scope="col" class="text-start fw-normal text-muted"><a href="javascript:;" class="text-decoration-none d-block" (click)="SortUserList('fname')"> First Name </a></th>
+                  <th scope="col" class="text-start fw-normal text-muted"><a href="javascript:;" class="text-decoration-none d-block" (click)="SortUserList('iname')"> Last Name </a></th>
                   <th scope="col" class="text-center fw-normal text-muted">Phone</th>
-                  <th scope="col" class="text-center fw-normal text-muted">Email</th>
+                  <th scope="col" class="text-start fw-normal text-muted"><a href="javascript:;" class="text-decoration-none d-block" (click)="SortUserList('email')"> Email </a></th>
                   <th scope="col" class="text-center fw-normal text-muted">Access</th>
                   <th scope="col" class="text-center fw-normal text-muted">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr *ngFor="let obj of userslst,let i = index">
                   <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img src="../../../assets/images/user.png" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">John</strong> </span></td>
-                  <td class="text-start"><strong>Doe</strong></td>
-                  <td class="text-center"><strong>+12 215 512 65</strong></td>
-                  <td class="text-center"><strong>email@email.com</strong></td>
-                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">Contributer</small></td>
-                  <td class="text-center"><a href="javascript:;" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img [lazyLoad]="obj.image" [defaultImage]="obj.image" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">{{obj.fname}}</strong></span></td>
+                  <td class="text-start"><strong>{{obj.lname}}</strong></td>
+                  <td class="text-center"><strong>{{obj.phone}}</strong></td>
+                  <td class="text-center"><strong>{{obj.email}}</strong></td>
+                  <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">{{obj.access}}</small></td>
+                  <td class="text-center"><a href="javascript:;" (click)="Deleteuser(obj.userId)" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold" (click)="Edituser(obj)"><i class="fas fa-edit me-1"></i> Edit</a></td>
                 </tr>
                 <tr class="border-0">
                   <td colspan="7" class="text-center"></td>
@@ -209,3 +157,12 @@
     </div>
   </section>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body"> </div>
+    </div>
+  </div>
+</div>

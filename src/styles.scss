@@ -290,6 +290,13 @@ a:hover {
   border-color:#0080C9;
   font-weight: bold !important;
 }
+.cropped{
+  width:150px;
+  height: 150px;
+}
+.ngx-ic-source-image{
+   max-width:80%;
+}
 @media (max-width:550px){
   .bookmarks, .bookmarks a{
     display:block !important;
