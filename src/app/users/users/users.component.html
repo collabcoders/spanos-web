@@ -79,7 +79,10 @@
                 </div>
                 <div class="clearfix"></div>
               </div>
-              <div class="col-md-12"> <a (click)="AddUpdateuser()" href="javascript:;" class="btn btn-primary p-3 w-100 rounded-pill mt-5 mb-2">Add User</a> </div>
+              <div class="col-md-12"> 
+                <input type="hidden" [(ngModel)]="userobj.image">
+                <a (click)="initSaveUser()" href="javascript:;" class="btn btn-primary p-3 w-100 rounded-pill mt-5 mb-2">Add User</a> 
+              </div>
             </div>
           </div>
         </div>
@@ -136,12 +139,12 @@
               <tbody>
                 <tr *ngFor="let obj of userslst,let i = index">
                   <td></td>
-                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img [lazyLoad]="obj.image" [defaultImage]="obj.image" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">{{obj.fname}}</strong></span></td>
+                  <td class="text-start"><span class="d-flex align-items w-100 mt-1"> <img [lazyLoad]="obj.image" [defaultImage]="'https://api.spanos.family/' + obj.image + 'max=100'" alt="User" class="img-fluid rounded-circle mt-0 me-2" width="30" height="30" /> <strong class="mt-1">{{obj.fname}}</strong></span></td>
                   <td class="text-start"><strong>{{obj.lname}}</strong></td>
                   <td class="text-center"><strong>{{obj.phone}}</strong></td>
                   <td class="text-center"><strong>{{obj.email}}</strong></td>
                   <td class="text-center"><small class="fs-11 bg-primary rounded-pill py-2 px-3 text-white text-uppercase">{{obj.access}}</small></td>
-                  <td class="text-center"><a href="javascript:;" (click)="Deleteuser(obj.userId)" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold" (click)="Edituser(obj)"><i class="fas fa-edit me-1"></i> Edit</a></td>
+                  <td class="text-center"><a href="javascript:;" (click)="Deleteuser(obj)" class="text-danger text-decoration-none fw-bold me-3"><i class="fas fa-trash me-1"></i> Delete</a> <a href="javascript:;" class="text-primary text-decoration-none fw-bold" (click)="Edituser(obj)"><i class="fas fa-edit me-1"></i> Edit</a></td>
                 </tr>
                 <tr class="border-0">
                   <td colspan="7" class="text-center"></td>

@@ -326,7 +326,6 @@ export class VideosComponent implements OnInit,AfterViewChecked{
 
   setCurrentTime(time:number)
   {
-    debugger;
     var player = videojs('videoPlay');
     player.currentTime(time);
   }

@@ -96,7 +96,6 @@ export class FavVideosComponent implements OnInit,AfterViewChecked {
   }
   LoadFavoriteVideos()
   {
-    debugger;
     this.SpinnerService.show();
     let params = new HttpParams().set("userId",1).set("favorites",true).set("row", 12);
     this.apiServices.get('/Videos?'+params).subscribe(data => {

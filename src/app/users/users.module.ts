@@ -10,7 +10,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LazyLoadImageModule,LAZYLOAD_IMAGE_HOOKS, ScrollHooks } from 'ng-lazyload-image';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
-
 @NgModule({
   declarations: [
     UsersComponent
