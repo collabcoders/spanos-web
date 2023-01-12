@@ -170,37 +170,37 @@ export class UsersComponent {
     this.SpinnerService.show();
     if (this.userobj.userId > 0) {
       console.log(this.userobj);
-      // this.apiServices.put('/UpdateUser', this.userobj).subscribe(data => {
-      //   try {
-      //     if (data.success) {
-      //       this.userobj = new User();
-      //       this.loadusers();
-      //       this.SpinnerService.hide();
-      //       this.showhidemain();
-      //       this.toster.success(data.message);
-      //     }
-      //   } catch {
-      //     this.SpinnerService.hide();
-      //     this.toster.error(data.message);
-      //   }
-      // });
+      this.apiServices.put('/UpdateUser', this.userobj).subscribe(data => {
+        try {
+          if (data.success) {
+            this.userobj = new User();
+            this.loadusers();
+            this.SpinnerService.hide();
+            this.showhidemain();
+            this.toster.success(data.message);
+          }
+        } catch {
+          this.SpinnerService.hide();
+          this.toster.error(data.message);
+        }
+      });
     }
     else {
       console.log(this.userobj);
-      // this.apiServices.post('/AddUser', this.userobj).subscribe(data => {
-      //   try {
-      //     if (data.success) {
-      //       this.userobj = new User();
-      //       this.loadusers();
-      //       this.showhidemain();
-      //       this.toster.success(data.message);
-      //       this.SpinnerService.hide();
-      //     }
-      //   } catch {
-      //     this.SpinnerService.hide();
-      //     this.toster.error(data.message);
-      //   }
-      // });
+      this.apiServices.post('/AddUser', this.userobj).subscribe(data => {
+        try {
+          if (data.success) {
+            this.userobj = new User();
+            this.loadusers();
+            this.showhidemain();
+            this.toster.success(data.message);
+            this.SpinnerService.hide();
+          }
+        } catch {
+          this.SpinnerService.hide();
+          this.toster.error(data.message);
+        }
+      });
     }
   }
 
